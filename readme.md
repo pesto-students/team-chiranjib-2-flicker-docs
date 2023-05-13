@@ -3,7 +3,7 @@
 1. clone this repo
 
    ```
-   git clone https://github.com/flicker-docs/flicker-docs.git
+   git clone https://github.com/pesto-students/team-chiranjib-2-flicker-docs.git
    ```
 
 1. install packages in client and start app
