@@ -40,8 +40,9 @@ export const Editor = () => {
     const provider = new WebrtcProvider(id, ydoc);
     const ytext = ydoc.getText('quill');
 
-    const binding = new QuillBinding(ytext, quillRef, provider.awareness);
-    console.log(binding);
+    new QuillBinding(ytext, quillRef, provider.awareness);
+    // const binding = new QuillBinding(ytext, quillRef, provider.awareness);
+    // console.log(binding);
   }, []);
 
   const modulesRef = {
