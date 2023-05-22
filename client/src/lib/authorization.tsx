@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { Comment } from '@/features/comments';
-import { User } from '@/features/users';
+// import { Comment } from '@/features/comments';
+// import { User } from '@/features/users';
 
 import { useAuth } from './auth';
 
@@ -12,19 +12,19 @@ export enum ROLES {
 
 type RoleTypes = keyof typeof ROLES;
 
-export const POLICIES = {
-  'comment:delete': (user: User, comment: Comment) => {
-    if (user.role === 'ADMIN') {
-      return true;
-    }
+// export const POLICIES = {
+//   'comment:delete': (user: User, comment: Comment) => {
+//     if (user.role === 'ADMIN') {
+//       return true;
+//     }
 
-    if (user.role === 'USER' && comment.authorId === user.id) {
-      return true;
-    }
+//     if (user.role === 'USER' && comment.authorId === user.id) {
+//       return true;
+//     }
 
-    return false;
-  },
-};
+//     return false;
+//   },
+// };
 
 export const useAuthorization = () => {
   const { user } = useAuth();
