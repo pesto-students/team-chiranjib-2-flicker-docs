@@ -1,10 +1,11 @@
 import { Suspense, useEffect } from 'react';
-import { Navigate, Outlet, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 
 import { Spinner } from '@/components/Elements';
 import { MainLayout, SettingsLayout } from '@/components/Layout';
 import { lazyImport } from '@/utils/lazyImport';
 
+const { Editor } = lazyImport(() => import('@/features/editor'), 'Editor');
 const { Dashboard } = lazyImport(() => import('@/features/misc'), 'Dashboard');
 // const { Profile } = lazyImport(() => import('@/features/users'), 'Profile');
 const { Users } = lazyImport(() => import('@/features/users'), 'Users');
@@ -35,29 +36,6 @@ const Docs = () => {
         className="bg-black text-white p-3 rounded-xl content-center"
       >
         Go to editor
-      </button>
-    </div>
-  );
-};
-
-const Editor = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  return (
-    <div className="flex flex-col items-center gap-4 pt-8">
-      <h1 className="text-4xl">Editor</h1>
-      <h1 className="text-4xl">Docs id: {id}</h1>
-      <button
-        onClick={() => navigate('/docs')}
-        className="bg-black text-white p-3 rounded-xl content-center"
-      >
-        go back to docs
-      </button>
-      <button
-        onClick={() => navigate('/settings')}
-        className="bg-black text-white p-3 rounded-xl content-center"
-      >
-        go to settings
       </button>
     </div>
   );
