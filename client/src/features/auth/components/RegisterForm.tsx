@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import * as z from 'zod';
 
 import { Button } from '@/components/Elements';
-import { Form, InputField, SelectField } from '@/components/Form';
-import { useTeams } from '@/features/teams';
+import { Form, InputField } from '@/components/Form';
 import { useAuth } from '@/lib/auth';
 
 const schema = z
@@ -39,12 +38,6 @@ type RegisterFormProps = {
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const { register, isRegistering } = useAuth();
   const [chooseTeam, setChooseTeam] = React.useState(false);
-
-  const teamsQuery = useTeams({
-    config: {
-      enabled: chooseTeam,
-    },
-  });
 
   return (
     <div>
@@ -104,24 +97,13 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
               </div>
             </Switch.Group>
 
-            {chooseTeam && teamsQuery.data ? (
-              <SelectField
-                label="Team"
-                error={formState.errors['teamId']}
-                registration={register('teamId')}
-                options={teamsQuery?.data?.map((team) => ({
-                  label: team.name,
-                  value: team.id,
-                }))}
-              />
-            ) : (
-              <InputField
-                type="text"
-                label="Team Name"
-                error={formState.errors['teamName']}
-                registration={register('teamName')}
-              />
-            )}
+            <InputField
+              type="text"
+              label="Team Name"
+              error={formState.errors['teamName']}
+              registration={register('teamName')}
+            />
+
             <div>
               <Button isLoading={isRegistering} type="submit" className="w-full">
                 Register
