@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import { QuillBinding } from 'y-quill';
 import { WebrtcProvider } from 'y-webrtc';
+import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
 
 export const Editor = () => {
@@ -33,11 +34,16 @@ export const Editor = () => {
     attachQuillRefs();
 
     // Quill.register("modules/cursors", QuillCursors);
+    // https://github.com/yjs/yjs/blob/master/README.md
 
     if (!id) return;
 
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(id, ydoc);
+
+    // Sync clients with the y-websocket provider
+    new WebsocketProvider('wss://localhost:1234', id, ydoc);
+
     const ytext = ydoc.getText('quill');
 
     new QuillBinding(ytext, quillRef, provider.awareness);
