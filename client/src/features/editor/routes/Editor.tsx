@@ -1,14 +1,41 @@
 import { useEffect } from 'react';
 import ReactQuill from 'react-quill';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import { QuillBinding } from 'y-quill';
 import { WebrtcProvider } from 'y-webrtc';
 import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
+import '../styles/editor.css';
+
+const CustomToolbar = () => (
+  <div id="toolbar" className="flex gap-4 bg-gray-100 rounded-lg">
+    <select className="ql-font">
+      <option value="arial" selected>
+        Arial
+      </option>
+      <option value="comic-sans">Comic Sans</option>
+      <option value="courier-new">Courier New</option>
+      <option value="georgia">Georgia</option>
+      <option value="helvetica">Helvetica</option>
+      <option value="lucida">Lucida</option>
+    </select>
+    <select className="ql-size">
+      <option value="extra-small">Size 1</option>
+      <option value="small">Size 2</option>
+      <option value="medium" selected>
+        Size 3
+      </option>
+      <option value="large">Size 4</option>
+    </select>
+    <select className="ql-align" />
+    <select className="ql-color" />
+    <select className="ql-background" />
+    {/* <button className="ql-clean" /> */}
+  </div>
+);
 
 export const Editor = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
 
   let quillRef: any = null;
@@ -51,45 +78,55 @@ export const Editor = () => {
     // console.log(binding);
   }, []);
 
-  const modulesRef = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      // ["bold", "italic", "underline", "strike", "blockquote"],
-      // [
-      //   { list: "ordered" },
-      //   { list: "bullet" },
-      //   { indent: "-1" },
-      //   { indent: "+1" },
-      // ],
-      // ["link", "image"],
-      // ["clean"],
-    ],
+  const modules = {
+    toolbar: {
+      container: '#toolbar',
+    },
   };
+
+  const formats = [
+    'header',
+    'font',
+    'size',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'image',
+    'color',
+  ];
 
   return (
     <>
-      <div className="flex items-center gap-4 pt-8 p-4">
-        <h1 className="text-4xl">Editor</h1>
-        <button
-          onClick={() => navigate('/docs')}
-          className="bg-black text-white p-3 rounded-xl content-center"
-        >
-          go back to docs
-        </button>
-        <button
-          onClick={() => navigate('/settings')}
-          className="bg-black text-white p-3 rounded-xl ml-3 content-center"
-        >
-          go to settings
-        </button>
+      <div className="h-[15vh] flex flex-col justify-between p-4">
+        <h4 className="text-lg">Docs</h4>
+        <CustomToolbar />
       </div>
-      <ReactQuill
-        ref={(el) => {
-          reactQuillRef = el;
-        }}
-        modules={modulesRef}
-        theme={'snow'}
-      />
+      <div className="bg-gray-100 flex p-6 gap-6 justify-center">
+        <ReactQuill
+          ref={(el) => {
+            reactQuillRef = el;
+          }}
+          modules={modules}
+          formats={formats}
+          style={{
+            minHeight: 'calc(85vh - 48px)',
+            width: '50%',
+            background: '#fff',
+            border: '0px !important',
+            borderRadius: '6px',
+          }}
+        />
+        <div className="flex flex-col gap-6 w-1/5">
+          <div className="h-[50%] w-[100%] bg-white rounded-md"></div>
+          <div className="h-[50%] w-[100%] bg-white rounded-md"></div>
+        </div>
+      </div>
     </>
   );
 };
