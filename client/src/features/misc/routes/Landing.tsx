@@ -22,7 +22,7 @@ export const Landing = () => {
       <h1 className='text-4xl'>Landing page</h1>
       <button
         onClick={() => navigate('/dashboard')}
-        className='bg-black text-white p-3 rounded-md content-center'
+        className='content-center rounded-md bg-black p-3 text-white'
       >
         Go to docs
       </button>

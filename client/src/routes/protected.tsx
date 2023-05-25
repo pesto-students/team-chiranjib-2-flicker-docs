@@ -11,7 +11,7 @@ const Settings = () => {
     <SettingsLayout>
       <Suspense
         fallback={
-          <div className='h-full w-full flex items-center justify-center'>
+          <div className='flex h-full w-full items-center justify-center'>
             {/* <Spinner size="sm" /> */}
           </div>
         }
@@ -29,7 +29,7 @@ const Profile = () => {
       <h1 className='text-4xl'>profile</h1>
       <button
         onClick={() => navigate('/dashboard')}
-        className='bg-black text-white p-3 rounded-xl content-center'
+        className='content-center rounded-xl bg-black p-3 text-white'
       >
         go back to docs
       </button>
@@ -44,7 +44,7 @@ const MyPlan = () => {
       <h1 className='text-4xl'>Myplan</h1>
       <button
         onClick={() => navigate('/dashboard')}
-        className='bg-black text-white p-3 rounded-xl content-center'
+        className='content-center rounded-xl bg-black p-3 text-white'
       >
         go back to docs
       </button>

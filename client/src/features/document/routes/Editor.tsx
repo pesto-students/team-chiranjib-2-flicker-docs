@@ -18,15 +18,15 @@ import ShareModal from '../components/ShareModal';
 
 const Header = ({ openModal }: { openModal: () => void }) => {
   return (
-    <div className='h-[15vh] flex flex-col justify-between py-3 ps-8 pe-8'>
+    <div className='flex h-[15vh] flex-col justify-between py-3 pe-8 ps-8'>
       <div className='flex justify-between'>
         <div className='flex gap-3'>
           <div>
             <FlickerDocsLogo />
           </div>
           <div className='flex flex-col justify-between'>
-            <h4 className='text-lg font-semibold text-slate-600 leading-none'>Doc name</h4>
-            <div className='flex gap-2 text-xs text-slate-600 leading-none'>
+            <h4 className='text-lg font-semibold leading-none text-slate-600'>Doc name</h4>
+            <div className='flex gap-2 text-xs leading-none text-slate-600'>
               <p>File</p>
               <p>Edit</p>
               <p>View</p>
@@ -34,7 +34,7 @@ const Header = ({ openModal }: { openModal: () => void }) => {
           </div>
         </div>
 
-        <div className='flex gap-6 items-center'>
+        <div className='flex items-center gap-6'>
           <Button onClick={openModal}>
             <Lock className='mr-2 h-4 w-4' /> Share
           </Button>
@@ -107,7 +107,7 @@ export const Editor = () => {
   return (
     <>
       <Header openModal={openModal} />
-      <div className='bg-slate-100 flex p-4 gap-4 justify-center'>
+      <div className='flex justify-center gap-4 bg-slate-100 p-4'>
         <ReactQuill
           ref={(el: any) => {
             reactQuillRef = el;
@@ -123,8 +123,8 @@ export const Editor = () => {
             borderRadius: '6px',
           }}
         />
-        <div className='flex flex-col gap-6 w-1/5'>
-          <div className='h-[50%] w-[100%] bg-white rounded-md'></div>
+        <div className='flex w-1/5 flex-col gap-6'>
+          <div className='h-[50%] w-[100%] rounded-md bg-white'></div>
           {/* <div className="h-[50%] w-[100%] bg-white rounded-md"></div> */}
         </div>
       </div>

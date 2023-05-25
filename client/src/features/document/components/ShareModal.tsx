@@ -13,18 +13,18 @@ const ShareModal = ({ closeModal, Modal }: Props) => {
 
   return (
     <Modal>
-      <div className='h-[360px] w-[600px] bg-white rounded-md flex flex-col justify-between'>
-        <div className='h-[50px] flex justify-between px-6 border-b-2 border-slate-100 items-center'>
+      <div className='flex h-[360px] w-[600px] flex-col justify-between rounded-md bg-white'>
+        <div className='flex h-[50px] items-center justify-between border-b-2 border-slate-100 px-6'>
           <p>Share</p>
-          <button onClick={closeModal} className=' hover:bg-slate-100 rounded-full p-1'>
+          <button onClick={closeModal} className=' rounded-full p-1 hover:bg-slate-100'>
             <X />
           </button>
         </div>
-        <div className='p-6 flex-1'>
+        <div className='flex-1 p-6'>
           <Input placeholder='Enter Email...' type='email' required />
         </div>
 
-        <div className='h-16 border-t-2 border-slate-100 flex justify-between items-center p-6'>
+        <div className='flex h-16 items-center justify-between border-t-2 border-slate-100 p-6'>
           <Button
             variant='outline'
             className='rounded-full border-blue-600 text-blue-600 hover:text-blue-700'

@@ -1,5 +1,5 @@
 export const CustomToolbar = () => (
-  <div id='toolbar' className='flex gap-4 bg-slate-100 rounded-lg'>
+  <div id='toolbar' className='flex gap-4 rounded-lg bg-slate-100'>
     <select className='ql-font'>
       <option value='arial' selected>
         Arial
