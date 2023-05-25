@@ -9,7 +9,7 @@ import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
 
 import '../styles/editor.css';
-import { Button } from '@/components';
+import { AvatarWithDropdown, Button } from '@/components';
 import { FlickerDocsLogo } from '@/constants';
 import { useModal } from '@/hooks';
 
@@ -39,7 +39,7 @@ const Header = ({ openModal }: { openModal: () => void }) => {
             <Lock className='mr-2 h-4 w-4' /> Share
           </Button>
 
-          <div className='w-9 h-9 bg-gray-300 rounded-full'></div>
+          <AvatarWithDropdown />
         </div>
       </div>
       <CustomToolbar />

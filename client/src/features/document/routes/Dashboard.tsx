@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components';
+import { AvatarWithDropdown, Button } from '@/components';
 import { FlickerDocsLogo } from '@/constants';
 
 export const Dashboard = () => {
@@ -14,10 +14,7 @@ export const Dashboard = () => {
         </div>
         <div className='flex gap-8'>
           <Button>Upgrade plan</Button>
-          <Avatar>
-            <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <AvatarWithDropdown />
         </div>
       </header>
       <div className='flex flex-col items-center gap-4 pt-8'>
