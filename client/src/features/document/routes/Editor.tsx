@@ -9,8 +9,8 @@ import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
 
 import '../styles/editor.css';
-import { Button } from '@/components';
-import { docLogo } from '@/constants';
+import { AvatarWithDropdown, Button } from '@/components';
+import { FlickerDocsLogo } from '@/constants';
 import { useModal } from '@/hooks';
 
 import { CustomToolbar } from '../components/CustomToolbar';
@@ -21,7 +21,9 @@ const Header = ({ openModal }: { openModal: () => void }) => {
     <div className='h-[15vh] flex flex-col justify-between py-3 ps-8 pe-8'>
       <div className='flex justify-between'>
         <div className='flex gap-3'>
-          <div>{docLogo()}</div>
+          <div>
+            <FlickerDocsLogo />
+          </div>
           <div className='flex flex-col justify-between'>
             <h4 className='text-lg font-semibold text-slate-600 leading-none'>Doc name</h4>
             <div className='flex gap-2 text-xs text-slate-600 leading-none'>
@@ -37,7 +39,7 @@ const Header = ({ openModal }: { openModal: () => void }) => {
             <Lock className='mr-2 h-4 w-4' /> Share
           </Button>
 
-          <div className='w-9 h-9 bg-gray-300 rounded-full'></div>
+          <AvatarWithDropdown />
         </div>
       </div>
       <CustomToolbar />

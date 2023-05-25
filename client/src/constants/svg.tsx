@@ -1,4 +1,4 @@
-export const docLogo = () => {
+export const FlickerDocsLogo = ({ customStyles }: { customStyles?: any }) => {
   return (
     <svg
       fill='#000000'
@@ -8,7 +8,7 @@ export const docLogo = () => {
       id='Layer_1'
       xmlns='http://www.w3.org/2000/svg'
       viewBox='0 0 512.001 512.001'
-      style={{ fill: '#FFBA40' }}
+      style={{ fill: '#FFBA40', ...customStyles }}
     >
       <g>
         <g>
