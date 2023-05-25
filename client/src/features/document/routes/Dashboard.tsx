@@ -182,14 +182,6 @@ export const Dashboard = () => {
           <Tabs />
         </div>
       </main>
-      {/* <div className='flex flex-col items-center gap-4 pt-8'>
-        <button
-          onClick={() => navigate('/editor/12342332')}
-          className='bg-black text-white p-3 rounded-xl content-center'
-        >
-          Go to editor
-        </button>
-      </div> */}
     </>
   );
 };
