@@ -8,8 +8,8 @@ import { publicRoutes } from './public';
 
 const Pricing = () => {
   return (
-    <div className="flex flex-col items-center gap-4 pt-8">
-      <h1 className="text-4xl">Pricing page</h1>
+    <div className='flex flex-col items-center gap-4 pt-8'>
+      <h1 className='text-4xl'>Pricing page</h1>
     </div>
   );
 };
