@@ -10,7 +10,7 @@ import * as Y from 'yjs';
 
 import '../styles/editor.css';
 import { Button } from '@/components';
-import { docLogo } from '@/constants';
+import { FlickerDocsLogo } from '@/constants';
 import { useModal } from '@/hooks';
 
 import { CustomToolbar } from '../components/CustomToolbar';
@@ -21,7 +21,9 @@ const Header = ({ openModal }: { openModal: () => void }) => {
     <div className='h-[15vh] flex flex-col justify-between py-3 ps-8 pe-8'>
       <div className='flex justify-between'>
         <div className='flex gap-3'>
-          <div>{docLogo()}</div>
+          <div>
+            <FlickerDocsLogo />
+          </div>
           <div className='flex flex-col justify-between'>
             <h4 className='text-lg font-semibold text-slate-600 leading-none'>Doc name</h4>
             <div className='flex gap-2 text-xs text-slate-600 leading-none'>

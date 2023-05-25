@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
+    "@radix-ui/react-avatar": "^1.0.2",
     "@radix-ui/react-slot": "^1.0.1",
     "@storybook/react": "^7.0.17",
     "@testing-library/jest-dom": "^5.16.5",
