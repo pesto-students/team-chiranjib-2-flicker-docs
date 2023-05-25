@@ -3,7 +3,8 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 import { SettingsLayout } from '@/components/Layout/ProfileLayout';
 import { lazyImport } from '@/utils/lazyImport';
-const { Editor } = lazyImport(() => import('@/features/editor'), 'Editor');
+const { Editor } = lazyImport(() => import('@/features/document'), 'Editor');
+const { Dashboard } = lazyImport(() => import('@/features/document'), 'Dashboard');
 
 const Settings = () => {
   return (
@@ -27,7 +28,7 @@ const Profile = () => {
     <div className='flex flex-col items-center gap-4 pt-8'>
       <h1 className='text-4xl'>profile</h1>
       <button
-        onClick={() => navigate('/docs')}
+        onClick={() => navigate('/dashboard')}
         className='bg-black text-white p-3 rounded-xl content-center'
       >
         go back to docs
@@ -42,7 +43,7 @@ const MyPlan = () => {
     <div className='flex flex-col items-center gap-4 pt-8'>
       <h1 className='text-4xl'>Myplan</h1>
       <button
-        onClick={() => navigate('/docs')}
+        onClick={() => navigate('/dashboard')}
         className='bg-black text-white p-3 rounded-xl content-center'
       >
         go back to docs
@@ -51,28 +52,13 @@ const MyPlan = () => {
   );
 };
 
-const Docs = () => {
-  const navigate = useNavigate();
-  return (
-    <div className='flex flex-col items-center gap-4 pt-8'>
-      <h1 className='text-4xl'>docs</h1>
-      <button
-        onClick={() => navigate('/docs/12342332')}
-        className='bg-black text-white p-3 rounded-xl content-center'
-      >
-        Go to editor
-      </button>
-    </div>
-  );
-};
-
 export const protectedRoutes = [
   {
-    path: '/docs',
-    element: <Docs />,
+    path: '/dashboard',
+    element: <Dashboard />,
   },
   {
-    path: '/docs/:id',
+    path: '/editor/:id',
     element: <Editor />,
   },
   {

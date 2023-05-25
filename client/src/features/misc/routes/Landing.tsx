@@ -21,7 +21,7 @@ export const Landing = () => {
     <div className='flex flex-col items-center gap-4 pt-8'>
       <h1 className='text-4xl'>Landing page</h1>
       <button
-        onClick={() => navigate('/docs')}
+        onClick={() => navigate('/dashboard')}
         className='bg-black text-white p-3 rounded-md content-center'
       >
         Go to docs
