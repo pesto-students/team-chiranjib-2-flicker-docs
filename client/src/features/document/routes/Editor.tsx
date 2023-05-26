@@ -48,7 +48,6 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 };
 
 export const Editor = () => {
-  console.log('in editor');
   const { id } = useParams();
   const { Modal, openModal, closeModal } = useModal();
 
@@ -70,15 +69,16 @@ export const Editor = () => {
 
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(id, ydoc);
-
     // Sync clients with the y-websocket provider
-    new WebsocketProvider('ws://localhost:1234', '', ydoc);
+    new WebsocketProvider('ws://localhost:1234', id, ydoc);
+    // ! run this in terminal to start websocket server
+    // PORT=1234 node ./node_modules/y-websocket/bin/server.js
 
     const ytext = ydoc.getText('quill');
-
     new QuillBinding(ytext, quillRef, provider.awareness);
     // const binding = new QuillBinding(ytext, quillRef, provider.awareness);
     // console.log(binding);
+    return () => provider.destroy();
   }, []);
 
   const modules = {
