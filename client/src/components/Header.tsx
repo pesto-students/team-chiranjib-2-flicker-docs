@@ -7,10 +7,10 @@ export const Header = () => (
   <header className='flex h-16 items-center justify-between px-12 shadow-md'>
     <div className='flex items-center gap-3'>
       <FlickerDocsLogo />
-      <h1 className='text-3xl font-extrabold'>Flicker Docs</h1>
+      <h1 className='text-sm font-extrabold md:text-3xl'>Flicker Docs</h1>
     </div>
     <div className='flex gap-8'>
-      <Button>Upgrade plan</Button>
+      <Button size={'sm'}>Upgrade plan</Button>
       <AvatarWithDropdown />
     </div>
   </header>

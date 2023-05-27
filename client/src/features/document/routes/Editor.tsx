@@ -1,11 +1,17 @@
+import { HocuspocusProvider } from '@hocuspocus/provider';
+import Collaboration from '@tiptap/extension-collaboration';
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 import { Lock } from 'lucide-react';
-import { useEffect } from 'react';
-import ReactQuill from 'react-quill';
-import { useParams } from 'react-router-dom';
+// import QuillCursors from 'quill-cursors';
+import { useEffect, useRef } from 'react';
+// import ReactQuill from 'react-quill';
+import { useParams, useSearchParams } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
-import { QuillBinding } from 'y-quill';
-import { WebrtcProvider } from 'y-webrtc';
-import { WebsocketProvider } from 'y-websocket';
+// import { QuillBinding } from 'y-quill';
+// import { WebrtcProvider } from 'y-webrtc';
+// import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
 
 import '../styles/editor.css';
@@ -49,66 +55,124 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 
 export const Editor = () => {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const name: string = searchParams.get('name') || 'anonymous';
+  const color: string = searchParams.get('color') || 'black';
+  const userID: string = searchParams.get('id') || '123';
+
   const { Modal, openModal, closeModal } = useModal();
 
-  let quillRef: any = null;
-  let reactQuillRef: any = null;
+  // let quillRef: any = null;
+  // let reactQuillRef: any = null;
+  const yRef: any = useRef(null);
+  const yRefEncoded: any = useRef(null);
+  const awainessRef: any = useRef(null);
 
-  const attachQuillRefs = () => {
-    if (typeof reactQuillRef.getEditor !== 'function') return;
-    quillRef = reactQuillRef.getEditor();
-  };
+  // const attachQuillRefs = () => {
+  //   if (typeof reactQuillRef.getEditor !== 'function') return;
+  //   quillRef = reactQuillRef.getEditor();
+  // };
 
   useEffect(() => {
-    attachQuillRefs();
+    // attachQuillRefs();
 
-    // Quill.register("modules/cursors", QuillCursors);
+    // ReactQuill.register('modules/cursors', QuillCursors);
     // https://github.com/yjs/yjs/blob/master/README.md
 
     if (!id) return;
 
-    const ydoc = new Y.Doc();
-    const provider = new WebrtcProvider(id, ydoc);
+    // const ydoc = new Y.Doc();
+    // const provider = new WebrtcProvider(id, ydoc);
+
+    yRef.current = ydoc;
+    // console.log(Y.encodeStateAsUpdate(ydoc));
+
     // Sync clients with the y-websocket provider
-    new WebsocketProvider('ws://localhost:1234', id, ydoc);
+    // const provider = new WebsocketProvider('ws://127.0.0.1:1234', id, ydoc);
+
     // ! run this in terminal to start websocket server
     // PORT=1234 node ./node_modules/y-websocket/bin/server.js
 
-    const ytext = ydoc.getText('quill');
-    new QuillBinding(ytext, quillRef, provider.awareness);
-    // const binding = new QuillBinding(ytext, quillRef, provider.awareness);
-    // console.log(binding);
-    return () => provider.destroy();
+    provider.on('status', (event: any) => {
+      console.log(`${event.status} to web socket server`); // logs "connected" or "disconnected"
+    });
+
+    const awareness = provider.awareness;
+
+    awareness.setLocalStateField('user', {
+      name: name,
+      color: color,
+      userID,
+    });
+
+    awainessRef.current = awareness;
+    // console.log(wsProvider);
+    // console.log(wsProvider.awareness);
+    // const ytext = ydoc.getText('quill');
+    // new QuillBinding(ytext, quillRef, provider.awareness);
+
+    return () => {
+      ydoc.destroy();
+      provider.disconnect();
+    };
   }, []);
 
-  const modules = {
-    toolbar: {
-      container: '#toolbar',
-    },
-  };
+  // const modules = {
+  //   toolbar: {
+  //     container: '#toolbar',
+  //   },
+  // };
 
-  const formats = [
-    'header',
-    'font',
-    'size',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
-    'color',
-  ];
+  // const formats = [
+  //   'header',
+  //   'font',
+  //   'size',
+  //   'bold',
+  //   'italic',
+  //   'underline',
+  //   'strike',
+  //   'blockquote',
+  //   'list',
+  //   'bullet',
+  //   'indent',
+  //   'link',
+  //   'image',
+  //   'color',
+  // ];
+
+  const ydoc = new Y.Doc();
+
+  const provider = new HocuspocusProvider({
+    url: 'ws://127.0.0.1:1234',
+    name: 'example-document',
+    document: ydoc,
+  });
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Collaboration.configure({
+        document: ydoc,
+      }),
+      CollaborationCursor.configure({
+        provider,
+        user: { name: 'John Doe', color: '#ffcc00' },
+      }),
+    ],
+    content: '<p>Hello World! 🌎️</p>',
+    editorProps: {
+      attributes: {
+        class:
+          'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
+      },
+    },
+  });
 
   return (
     <>
       <Header openModal={openModal} />
       <div className='flex justify-center gap-4 bg-slate-100 p-4'>
-        <ReactQuill
+        {/* <ReactQuill
           ref={(el: any) => {
             reactQuillRef = el;
           }}
@@ -122,9 +186,31 @@ export const Editor = () => {
             border: '0px !important',
             borderRadius: '6px',
           }}
-        />
+        /> */}
+        <EditorContent editor={editor} />
         <div className='flex w-1/5 flex-col gap-6'>
-          <div className='h-[50%] w-[100%] rounded-md bg-white'></div>
+          <div className='h-[50%] w-[100%] rounded-md bg-white p-2'>
+            <Button
+              onClick={() => {
+                yRefEncoded.current = Y.encodeStateAsUpdate(yRef.current);
+                console.log(yRefEncoded.current);
+              }}
+            >
+              encode
+            </Button>
+            <Button
+              className='ms-2'
+              onClick={() => {
+                console.log(yRef.current);
+                console.log(awainessRef.current.getStates());
+
+                console.log(awainessRef.current.getLocalState());
+                // console.log(Y.applyUpdate(yRef.current, yRefEncoded.current));
+              }}
+            >
+              decode
+            </Button>
+          </div>
           {/* <div className="h-[50%] w-[100%] bg-white rounded-md"></div> */}
         </div>
       </div>
