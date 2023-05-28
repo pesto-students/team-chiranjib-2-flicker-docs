@@ -6,10 +6,8 @@ import StarterKit from '@tiptap/starter-kit';
 import { Lock } from 'lucide-react';
 import randomColor from 'randomcolor';
 import { useParams, useSearchParams } from 'react-router-dom';
-import 'react-quill/dist/quill.snow.css';
 import * as Y from 'yjs';
 
-import '../styles/editor.css';
 import { AvatarWithDropdown, Button } from '@/components';
 import { FlickerDocsLogo } from '@/constants';
 import { useModal } from '@/hooks';

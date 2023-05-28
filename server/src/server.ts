@@ -21,43 +21,43 @@ const ToBase64 = function (u8) {
   return btoa(String.fromCharCode.apply(null, u8));
 };
 
-const FromBase64 = function (str) {
-  return atob(str)
-    .split('')
-    .map(function (c) {
-      return c.charCodeAt(0);
-    });
+// const FromBase64 = function (str) {
+//   return atob(str)
+//     .split('')
+//     .map(function (c) {
+//       return c.charCodeAt(0);
+//     });
+// };
+
+const base64ToUnit8Array = base64string => {
+  const binaryString = atob(base64string);
+  return Uint8Array.from(binaryString, c => c.charCodeAt(0));
 };
-
-// const encoder = new TextEncoder();
-// const data = encoder.encode(uint8Array);
-// const base64String = btoa(String.fromCharCode.apply(null, data));
-
-// const binaryString = atob(base64String);
-// const uint8Array = Uint8Array.from(binaryString, (c) => c.charCodeAt(0));
 
 const server = new Hocuspocus({
   port: 1234,
   extensions: [new Logger()],
   async onStoreDocument(data) {
     const bs = ToBase64(Y.encodeStateAsUpdate(data.document));
-    // console.log('============');
+
     const response = await DocumentModel.find({ name: data.documentName });
-    if (response[0]?.data) return;
+    if (!response[0]?.data) {
+      const createUserData = new DocumentModel();
+      createUserData.name = data.documentName;
+      createUserData.data = bs;
 
-    const createUserData = new DocumentModel();
-    createUserData.name = data.documentName;
-    createUserData.data = bs;
-
-    await createUserData.save();
+      await createUserData.save();
+    } else {
+      await DocumentModel.updateOne({ name: data.documentName }, { data: bs });
+    }
   },
 
   async onLoadDocument(data) {
     const response = await DocumentModel.find({ name: data.documentName });
 
     if (response[0]?.data) {
-      const unit8Ar = FromBase64(response[0].data);
-      const uint8arr = new Uint8Array(unit8Ar);
+      // const unit8Ar = FromBase64(response[0].data);
+      const uint8arr = base64ToUnit8Array(response[0]?.data);
       const ydoc = new Y.Doc();
 
       Y.applyUpdate(ydoc, uint8arr);
