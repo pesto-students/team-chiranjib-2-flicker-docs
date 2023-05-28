@@ -18,6 +18,7 @@
   "dependencies": {
     "@hocuspocus/extension-database": "^2.0.6",
     "@hocuspocus/extension-logger": "^2.0.6",
+    "@hocuspocus/extension-sqlite": "^2.0.6",
     "@hocuspocus/server": "^2.0.6",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
@@ -33,6 +34,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.0",
     "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.3.3",
     "reflect-metadata": "^0.1.13",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.5.0",

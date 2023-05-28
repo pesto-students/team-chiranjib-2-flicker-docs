@@ -7,10 +7,7 @@ import { Lock } from 'lucide-react';
 // import QuillCursors from 'quill-cursors';
 // import { useEffect, useRef } from 'react';
 // import ReactQuill from 'react-quill';
-import {
-  //  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 // import { QuillBinding } from 'y-quill';
 // import { WebrtcProvider } from 'y-webrtc';
@@ -57,7 +54,7 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 };
 
 export const Editor = () => {
-  // const { id } = useParams();
+  const { id } = useParams();
 
   const [searchParams] = useSearchParams();
   const name: string = searchParams.get('name') || 'anonymous';
@@ -151,7 +148,7 @@ export const Editor = () => {
 
   const provider = new HocuspocusProvider({
     url: 'ws://127.0.0.1:1234',
-    name: 'default',
+    name: id || 'default',
     document: ydoc,
   });
 
