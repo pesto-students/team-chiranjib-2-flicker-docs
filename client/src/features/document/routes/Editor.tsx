@@ -5,9 +5,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Lock } from 'lucide-react';
 // import QuillCursors from 'quill-cursors';
-import { useEffect, useRef } from 'react';
+// import { useEffect, useRef } from 'react';
 // import ReactQuill from 'react-quill';
-import { useParams, useSearchParams } from 'react-router-dom';
+import {
+  //  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 // import { QuillBinding } from 'y-quill';
 // import { WebrtcProvider } from 'y-webrtc';
@@ -54,68 +57,68 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 };
 
 export const Editor = () => {
-  const { id } = useParams();
+  // const { id } = useParams();
+
   const [searchParams] = useSearchParams();
   const name: string = searchParams.get('name') || 'anonymous';
   const color: string = searchParams.get('color') || 'black';
-  const userID: string = searchParams.get('id') || '123';
+  // const userID: string = searchParams.get('id') || '123';
 
   const { Modal, openModal, closeModal } = useModal();
 
   // let quillRef: any = null;
   // let reactQuillRef: any = null;
-  const yRef: any = useRef(null);
-  const yRefEncoded: any = useRef(null);
-  const awainessRef: any = useRef(null);
+  // const yRef: any = useRef(null);
+  // const awainessRef: any = useRef(null);
 
   // const attachQuillRefs = () => {
   //   if (typeof reactQuillRef.getEditor !== 'function') return;
   //   quillRef = reactQuillRef.getEditor();
   // };
 
-  useEffect(() => {
-    // attachQuillRefs();
+  // useEffect(() => {
+  // attachQuillRefs();
 
-    // ReactQuill.register('modules/cursors', QuillCursors);
-    // https://github.com/yjs/yjs/blob/master/README.md
+  // ReactQuill.register('modules/cursors', QuillCursors);
+  // https://github.com/yjs/yjs/blob/master/README.md
 
-    if (!id) return;
+  // if (!id) return;
 
-    // const ydoc = new Y.Doc();
-    // const provider = new WebrtcProvider(id, ydoc);
+  // const ydoc = new Y.Doc();
+  // const provider = new WebrtcProvider(id, ydoc);
 
-    yRef.current = ydoc;
-    // console.log(Y.encodeStateAsUpdate(ydoc));
+  // yRef.current = ydoc;
+  // console.log(Y.encodeStateAsUpdate(ydoc));
 
-    // Sync clients with the y-websocket provider
-    // const provider = new WebsocketProvider('ws://127.0.0.1:1234', id, ydoc);
+  // Sync clients with the y-websocket provider
+  // const provider = new WebsocketProvider('ws://127.0.0.1:1234', id, ydoc);
 
-    // ! run this in terminal to start websocket server
-    // PORT=1234 node ./node_modules/y-websocket/bin/server.js
+  // ! run this in terminal to start websocket server
+  // PORT=1234 node ./node_modules/y-websocket/bin/server.js
 
-    provider.on('status', (event: any) => {
-      console.log(`${event.status} to web socket server`); // logs "connected" or "disconnected"
-    });
+  // provider.on('status', (event: any) => {
+  //   console.log(`${event.status} to web socket server`); // logs "connected" or "disconnected"
+  // });
 
-    const awareness = provider.awareness;
+  // const awareness = provider.awareness;
 
-    awareness.setLocalStateField('user', {
-      name: name,
-      color: color,
-      userID,
-    });
+  // awareness.setLocalStateField('user', {
+  //   name: name,
+  //   color: color,
+  //   userID,
+  // });
 
-    awainessRef.current = awareness;
-    // console.log(wsProvider);
-    // console.log(wsProvider.awareness);
-    // const ytext = ydoc.getText('quill');
-    // new QuillBinding(ytext, quillRef, provider.awareness);
+  // awainessRef.current = awareness;
+  // console.log(wsProvider);
+  // console.log(wsProvider.awareness);
+  // const ytext = ydoc.getText('quill');
+  // new QuillBinding(ytext, quillRef, provider.awareness);
 
-    return () => {
-      ydoc.destroy();
-      provider.disconnect();
-    };
-  }, []);
+  // return () => {
+  //   ydoc.destroy();
+  //   provider.disconnect();
+  // };
+  // }, []);
 
   // const modules = {
   //   toolbar: {
@@ -140,11 +143,15 @@ export const Editor = () => {
   //   'color',
   // ];
 
+  // const editorRef: any = useRef();
+
   const ydoc = new Y.Doc();
+
+  // const provider = new WebsocketProvider('ws://127.0.0.1:1234', id || 'default', ydoc);
 
   const provider = new HocuspocusProvider({
     url: 'ws://127.0.0.1:1234',
-    name: 'example-document',
+    name: 'default',
     document: ydoc,
   });
 
@@ -156,14 +163,14 @@ export const Editor = () => {
       }),
       CollaborationCursor.configure({
         provider,
-        user: { name: 'John Doe', color: '#ffcc00' },
+        user: { name: name, color: color },
       }),
     ],
-    content: '<p>Hello World! 🌎️</p>',
+
     editorProps: {
       attributes: {
         class:
-          'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
+          'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none bg-white rounded-md h-full',
       },
     },
   });
@@ -187,30 +194,15 @@ export const Editor = () => {
             borderRadius: '6px',
           }}
         /> */}
-        <EditorContent editor={editor} />
+        <EditorContent
+          editor={editor}
+          style={{
+            height: 'calc(85vh - 32px)',
+            width: '50%',
+          }}
+        />
         <div className='flex w-1/5 flex-col gap-6'>
-          <div className='h-[50%] w-[100%] rounded-md bg-white p-2'>
-            <Button
-              onClick={() => {
-                yRefEncoded.current = Y.encodeStateAsUpdate(yRef.current);
-                console.log(yRefEncoded.current);
-              }}
-            >
-              encode
-            </Button>
-            <Button
-              className='ms-2'
-              onClick={() => {
-                console.log(yRef.current);
-                console.log(awainessRef.current.getStates());
-
-                console.log(awainessRef.current.getLocalState());
-                // console.log(Y.applyUpdate(yRef.current, yRefEncoded.current));
-              }}
-            >
-              decode
-            </Button>
-          </div>
+          <div className='h-[50%] w-[100%] rounded-md bg-white p-2'></div>
           {/* <div className="h-[50%] w-[100%] bg-white rounded-md"></div> */}
         </div>
       </div>
