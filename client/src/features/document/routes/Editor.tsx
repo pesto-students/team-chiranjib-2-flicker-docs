@@ -4,14 +4,9 @@ import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Lock } from 'lucide-react';
-// import QuillCursors from 'quill-cursors';
-// import { useEffect, useRef } from 'react';
-// import ReactQuill from 'react-quill';
+import randomColor from 'randomcolor';
 import { useParams, useSearchParams } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
-// import { QuillBinding } from 'y-quill';
-// import { WebrtcProvider } from 'y-webrtc';
-// import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
 
 import '../styles/editor.css';
@@ -58,93 +53,10 @@ export const Editor = () => {
 
   const [searchParams] = useSearchParams();
   const name: string = searchParams.get('name') || 'anonymous';
-  const color: string = searchParams.get('color') || 'black';
-  // const userID: string = searchParams.get('id') || '123';
 
   const { Modal, openModal, closeModal } = useModal();
 
-  // let quillRef: any = null;
-  // let reactQuillRef: any = null;
-  // const yRef: any = useRef(null);
-  // const awainessRef: any = useRef(null);
-
-  // const attachQuillRefs = () => {
-  //   if (typeof reactQuillRef.getEditor !== 'function') return;
-  //   quillRef = reactQuillRef.getEditor();
-  // };
-
-  // useEffect(() => {
-  // attachQuillRefs();
-
-  // ReactQuill.register('modules/cursors', QuillCursors);
-  // https://github.com/yjs/yjs/blob/master/README.md
-
-  // if (!id) return;
-
-  // const ydoc = new Y.Doc();
-  // const provider = new WebrtcProvider(id, ydoc);
-
-  // yRef.current = ydoc;
-  // console.log(Y.encodeStateAsUpdate(ydoc));
-
-  // Sync clients with the y-websocket provider
-  // const provider = new WebsocketProvider('ws://127.0.0.1:1234', id, ydoc);
-
-  // ! run this in terminal to start websocket server
-  // PORT=1234 node ./node_modules/y-websocket/bin/server.js
-
-  // provider.on('status', (event: any) => {
-  //   console.log(`${event.status} to web socket server`); // logs "connected" or "disconnected"
-  // });
-
-  // const awareness = provider.awareness;
-
-  // awareness.setLocalStateField('user', {
-  //   name: name,
-  //   color: color,
-  //   userID,
-  // });
-
-  // awainessRef.current = awareness;
-  // console.log(wsProvider);
-  // console.log(wsProvider.awareness);
-  // const ytext = ydoc.getText('quill');
-  // new QuillBinding(ytext, quillRef, provider.awareness);
-
-  // return () => {
-  //   ydoc.destroy();
-  //   provider.disconnect();
-  // };
-  // }, []);
-
-  // const modules = {
-  //   toolbar: {
-  //     container: '#toolbar',
-  //   },
-  // };
-
-  // const formats = [
-  //   'header',
-  //   'font',
-  //   'size',
-  //   'bold',
-  //   'italic',
-  //   'underline',
-  //   'strike',
-  //   'blockquote',
-  //   'list',
-  //   'bullet',
-  //   'indent',
-  //   'link',
-  //   'image',
-  //   'color',
-  // ];
-
-  // const editorRef: any = useRef();
-
   const ydoc = new Y.Doc();
-
-  // const provider = new WebsocketProvider('ws://127.0.0.1:1234', id || 'default', ydoc);
 
   const provider = new HocuspocusProvider({
     url: 'ws://127.0.0.1:1234',
@@ -160,7 +72,7 @@ export const Editor = () => {
       }),
       CollaborationCursor.configure({
         provider,
-        user: { name: name, color: color },
+        user: { name: name, color: randomColor() },
       }),
     ],
 
@@ -176,21 +88,6 @@ export const Editor = () => {
     <>
       <Header openModal={openModal} />
       <div className='flex justify-center gap-4 bg-slate-100 p-4'>
-        {/* <ReactQuill
-          ref={(el: any) => {
-            reactQuillRef = el;
-          }}
-          modules={modules}
-          formats={formats}
-          placeholder='Start writing...'
-          style={{
-            height: 'calc(85vh - 32px)',
-            width: '50%',
-            background: '#fff',
-            border: '0px !important',
-            borderRadius: '6px',
-          }}
-        /> */}
         <EditorContent
           editor={editor}
           style={{

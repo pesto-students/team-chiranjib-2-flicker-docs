@@ -28,6 +28,7 @@
     "dayjs": "^1.11.7",
     "lucide-react": "^0.221.0",
     "quill-cursors": "^4.0.2",
+    "randomcolor": "^0.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.4",
@@ -75,6 +76,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
+    "@types/randomcolor": "^0.5.7",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
     "@typescript-eslint/parser": "^5.59.7",
     "eslint": "^8.41.0",
