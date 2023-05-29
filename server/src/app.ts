@@ -14,6 +14,7 @@ import { dbConnection } from '@database';
 import { Routes } from '@interfaces/routes.interface';
 import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import websocketServer from './websocketServer';
 
 export class App {
   public app: express.Application;
@@ -39,6 +40,7 @@ export class App {
       logger.info(`🚀 App listening on the port ${this.port}`);
       logger.info(`=================================`);
     });
+    websocketServer.listen();
   }
 
   public getServer() {
