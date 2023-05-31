@@ -1,52 +1,62 @@
-import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { Service } from 'typedi';
-import { SECRET_KEY } from '@config';
+
 import { HttpException } from '@exceptions/httpException';
-import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
+
 import { User } from '@interfaces/users.interface';
 import { UserModel } from '@models/users.model';
 
-const createToken = (user: User): TokenData => {
-  const dataStoredInToken: DataStoredInToken = { _id: user._id };
-  const expiresIn: number = 60 * 60;
+import { OAuth2Client } from 'google-auth-library';
+import { GOOGLE_OAUTH_CLIENT_ID } from '@/config';
 
-  return { expiresIn, token: sign(dataStoredInToken, SECRET_KEY, { expiresIn }) };
-};
+const client = new OAuth2Client(GOOGLE_OAUTH_CLIENT_ID);
 
-const createCookie = (tokenData: TokenData): string => {
-  return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
-};
+async function verifyGoogleToken(token: any) {
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: GOOGLE_OAUTH_CLIENT_ID,
+    });
+    return { payload: ticket.getPayload() };
+  } catch (error) {
+    return { error: 'Invalid user detected. Please try again' };
+  }
+}
 
 @Service()
 export class AuthService {
-  public async signup(userData: User): Promise<User> {
-    const findUser: User = await UserModel.findOne({ email: userData.email });
-    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+  public async signIn(credential: any): Promise<User> {
+    if (credential) {
+      const verificationResponse = await verifyGoogleToken(credential);
 
-    const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = await UserModel.create({ ...userData, password: hashedPassword });
+      if (verificationResponse.error) {
+        throw new HttpException(409, verificationResponse.error);
+      }
 
-    return createUserData;
-  }
+      const profile = verificationResponse?.payload;
 
-  public async login(userData: User): Promise<{ cookie: string; findUser: User }> {
-    const findUser: User = await UserModel.findOne({ email: userData.email });
-    if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
+      const user = {
+        name: profile?.name,
+        firstName: profile?.given_name,
+        lastName: profile?.family_name,
+        picture: profile?.picture,
+        email: profile?.email,
+      };
 
-    const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
-    if (!isPasswordMatching) throw new HttpException(409, 'Password is not matching');
+      const findUser: User = await UserModel.findOne({ email: user.email });
 
-    const tokenData = createToken(findUser);
-    const cookie = createCookie(tokenData);
+      if (!findUser) {
+        await UserModel.create({
+          ...user,
+        });
+      }
 
-    return { cookie, findUser };
-  }
-
-  public async logout(userData: User): Promise<User> {
-    const findUser: User = await UserModel.findOne({ email: userData.email, password: userData.password });
-    if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
-
-    return findUser;
+      return {
+        ...user,
+        token: sign({ email: profile?.email }, 'myScret', {
+          expiresIn: '1d',
+        }),
+      };
+    }
   }
 }

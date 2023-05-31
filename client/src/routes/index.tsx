@@ -1,10 +1,9 @@
 import { useRoutes } from 'react-router-dom';
 
 import { Landing } from '@/features/misc';
-// import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/hooks';
 
 import { protectedRoutes } from './protected';
-import { publicRoutes } from './public';
 
 const Pricing = () => {
   return (
@@ -15,16 +14,17 @@ const Pricing = () => {
 };
 
 export const AppRoutes = () => {
-  // const auth = useAuth();
+  const { user } = useAuth();
+  console.log(user);
 
   const commonRoutes = [
     { path: '/', element: <Landing /> },
     { path: '/pricing', element: <Pricing /> },
   ];
 
-  // const routes = auth.user ? protectedRoutes : publicRoutes;
+  const routes = user ? protectedRoutes : [];
 
-  const element = useRoutes([...protectedRoutes, ...publicRoutes, ...commonRoutes]);
+  const element = useRoutes([...routes, ...commonRoutes]);
 
   return <>{element}</>;
 };
