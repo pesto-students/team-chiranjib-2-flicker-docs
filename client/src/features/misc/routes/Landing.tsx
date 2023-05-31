@@ -1,4 +1,8 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+
+import { Button } from '@/components';
 
 // import logo from '@/assets/logo.svg';
 // import { Button } from '@/components/Elements';
@@ -8,7 +12,7 @@ import { useNavigate } from 'react-router';
 export const Landing = () => {
   const navigate = useNavigate();
   // const { user } = useAuth();
-
+  const [user, setUser] = useState({ name: '', email: '' });
   // const handleStart = () => {
   //   if (user) {
   //     navigate('/app');
@@ -16,6 +20,32 @@ export const Landing = () => {
   //     navigate('/auth/login');
   //   }
   // };
+  const getUser = async () => {
+    try {
+      const url = `${process.env.REACT_APP_API_URL}/auth/login/success`;
+      const { data } = await axios.get(url, { withCredentials: true });
+      console.log(data);
+      setUser(data.user);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const logout = async () => {
+    window.open(`${process.env.REACT_APP_API_URL}/auth/logout`, '_self');
+    // const response = await axios.get(`${process.env.REACT_APP_API_URL}/auth/logout`);
+    // console.log(response);
+  };
+
+  const googleAuth = () => {
+    console.log(process.env.REACT_APP_API_URL);
+
+    window.open(`${process.env.REACT_APP_API_URL}/auth/google/callback`, '_self');
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <div className='flex flex-col items-center gap-4 pt-8'>
@@ -26,6 +56,15 @@ export const Landing = () => {
       >
         Go to docs
       </button>
+      <h1>{user.name}</h1>
+      <h1>{user.email}</h1>
+      {user.name ? (
+        <Button onClick={logout}>Log Out</Button>
+      ) : (
+        <Button onClick={googleAuth}>
+          <span>Sign in with Google</span>
+        </Button>
+      )}
     </div>
   );
   // return (

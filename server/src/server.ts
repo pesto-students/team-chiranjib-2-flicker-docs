@@ -13,111 +13,80 @@
 // import dotenv from 'dotenv';
 // dotenv.config();
 
-import express, { Request, Response } from 'express';
+import express from 'express';
+import 'dotenv/config';
 import cors from 'cors';
-import passport from 'passport';
-import cookieSession from 'cookie-session';
-import './passportConfig';
-import { connect } from './db';
+import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
-import { User } from './models/userModel';
 
 const app = express();
-
-app.use(
-  cookieSession({
-    name: 'session',
-    keys: ['flicker-docs'],
-    maxAge: 24 * 60 * 60 * 100,
-  }),
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-connect();
-
 app.use(
   cors({
-    origin: 'http://localhost:3000',
-    methods: 'GET,POST,PUT,DELETE',
-    credentials: true,
+    origin: ['http://localhost:3000'],
+    methods: 'GET,POST,PUT,DELETE,OPTIONS',
   }),
 );
+app.use(express.json());
 
-interface RequestWithUser extends Request {
-  user: any;
+// Our database
+const DB = [];
+
+/**
+ *  This function is used verify a google account
+ */
+const GOOGLE_CLIENT_ID = '244593955079-cauv4gaj7co1cfa2len0ted4micpkjd4.apps.googleusercontent.com';
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+async function verifyGoogleToken(token) {
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    return { payload: ticket.getPayload() };
+  } catch (error) {
+    return { error: 'Invalid user detected. Please try again' };
+  }
 }
 
-app.get('/auth/login/success', async (req: RequestWithUser, res: Response) => {
-  if (req.user) {
-    const existingUser = await User.findOne({ id: req.user.id });
+app.post('/auth/signin', async (req, res) => {
+  console.log('in signup');
+  try {
+    // console.log({ verified: verifyGoogleToken(req.body.credential) });
+    if (req.body.credential) {
+      const verificationResponse = await verifyGoogleToken(req.body.credential);
 
-    if (!existingUser) {
-      return res.status(403).json({ error: true, message: 'Not Authorized' });
-    }
-
-    jwt.sign({ user: existingUser }, 'secretKey', { expiresIn: '1h' }, (err, token) => {
-      if (err) {
-        return res.json({
-          token: null,
+      if (verificationResponse.error) {
+        return res.status(400).json({
+          message: verificationResponse.error,
         });
       }
 
-      res.status(200).json({
-        error: false,
-        message: 'Successfully Loged In',
-        user: existingUser,
-        token,
+      const profile = verificationResponse?.payload;
+      const existsInDB = DB.find(person => person?.email === profile?.email);
+      console.log(existsInDB);
+      if (!existsInDB) {
+        DB.push(profile);
+      }
+
+      return res.status(201).json({
+        message: 'Signup was successful',
+        user: {
+          firstName: profile?.given_name,
+          lastName: profile?.family_name,
+          picture: profile?.picture,
+          email: profile?.email,
+          token: jwt.sign({ email: profile?.email }, 'myScret', {
+            expiresIn: '1d',
+          }),
+        },
       });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: 'An error occured. Registration failed.',
     });
-  } else {
-    res.status(403).json({ error: true, message: 'Not Authorized' });
   }
 });
 
-app.get('/auth/login/failed', (req, res) => {
-  res.status(401).json({
-    error: true,
-    message: 'Log in failure',
-  });
-});
-
-app.get('/auth/google', passport.authenticate('google', ['profile', 'email']));
-
-app.get(
-  '/auth/google/callback',
-  passport.authenticate('google', {
-    successRedirect: 'http://localhost:3000',
-    failureRedirect: '/auth/login/failed',
-  }),
-);
-
-// app.get(
-//   "/auth/google/callback",
-//   passport.authenticate("google", { session: false }),
-//   (req, res) => {
-//     jwt.sign(
-//       { user: req.user },
-//       "secretKey",
-//       { expiresIn: "1h" },
-//       (err, token) => {
-//         if (err) {
-//           return res.json({
-//             token: null,
-//           });
-//         }
-//         res.json({
-//           token,
-//         });
-//       }
-//     );
-//   }
-// );
-
-app.get('/auth/logout', (req, res) => {
-  //   req.logout();
-  res.redirect('http://localhost:3000');
-});
-
-const port = 5000;
-app.listen(port, () => console.log(`Listenting on port ${port}...`));
+app.listen('5000', () => console.log('Server running on port 5000'));
