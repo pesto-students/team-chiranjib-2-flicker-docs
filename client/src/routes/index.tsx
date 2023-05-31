@@ -4,7 +4,6 @@ import { Landing } from '@/features/misc';
 import { useAuth } from '@/hooks';
 
 import { protectedRoutes } from './protected';
-import { publicRoutes } from './public';
 
 const Pricing = () => {
   return (
@@ -23,7 +22,7 @@ export const AppRoutes = () => {
     { path: '/pricing', element: <Pricing /> },
   ];
 
-  const routes = user ? protectedRoutes : publicRoutes;
+  const routes = user ? protectedRoutes : [];
 
   const element = useRoutes([...routes, ...commonRoutes]);
 

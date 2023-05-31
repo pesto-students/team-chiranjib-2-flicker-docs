@@ -7,15 +7,15 @@ import { User } from '@interfaces/users.interface';
 import { UserModel } from '@models/users.model';
 
 import { OAuth2Client } from 'google-auth-library';
+import { GOOGLE_OAUTH_CLIENT_ID } from '@/config';
 
-const GOOGLE_CLIENT_ID = '244593955079-cauv4gaj7co1cfa2len0ted4micpkjd4.apps.googleusercontent.com';
-const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+const client = new OAuth2Client(GOOGLE_OAUTH_CLIENT_ID);
 
-async function verifyGoogleToken(token) {
+async function verifyGoogleToken(token: any) {
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: GOOGLE_CLIENT_ID,
+      audience: GOOGLE_OAUTH_CLIENT_ID,
     });
     return { payload: ticket.getPayload() };
   } catch (error) {
