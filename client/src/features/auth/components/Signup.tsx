@@ -10,7 +10,7 @@ declare global {
 }
 
 export const SignUp = () => {
-  const url = 'http://localhost:5000/auth/signin';
+  const url = `${process.env.REACT_APP}/auth/signin`;
 
   const handleGoogle = async (response: any) => {
     const data = JSON.stringify({ credential: response.credential });
@@ -33,9 +33,10 @@ export const SignUp = () => {
 
   useEffect(() => {
     // /* global google */
+
     if (window.google) {
       window.google.accounts.id.initialize({
-        client_id: '244593955079-cauv4gaj7co1cfa2len0ted4micpkjd4.apps.googleusercontent.com',
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
         callback: handleGoogle,
       });
 
@@ -56,7 +57,7 @@ export const SignUp = () => {
         alignItems: 'center',
       }}
     >
-      <div id='signUpDiv' data-text='signup_with'></div>
+      <div id='signUpDiv' data-text='signup_with' className='mt-6'></div>
     </main>
   );
 };

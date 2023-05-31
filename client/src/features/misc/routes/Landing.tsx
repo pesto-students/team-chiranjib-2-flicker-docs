@@ -1,18 +1,21 @@
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router';
 
+import { Button } from '@/components';
 import { SignUp } from '@/features/auth';
 import { useAuth } from '@/hooks';
 import { logout } from '@/lib';
 
 const Home = ({ user }: { user: any }) => {
   return (
-    <div style={{ textAlign: 'center', margin: '3rem' }}>
-      <img src={user.picture} alt='phot' />
-      <h3>{user?.email}</h3>
+    <div className='flex justify-center pt-8'>
+      <div className='flex w-1/6 flex-col items-center gap-3'>
+        <img src={user.picture} alt='phot' className='rounded-full' />
+        <h3 className='font-semibold text-slate-600'>{user?.email}</h3>
 
-      <div>
-        <button onClick={logout}>Logout</button>
+        <div>
+          <Button onClick={logout}>Logout</Button>
+        </div>
       </div>
     </div>
   );
