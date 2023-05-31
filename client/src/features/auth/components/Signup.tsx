@@ -10,7 +10,7 @@ declare global {
 }
 
 export const SignUp = () => {
-  const url = `${process.env.REACT_APP}/auth/signin`;
+  const url = `${process.env.REACT_APP_API}/auth/signin`;
 
   const handleGoogle = async (response: any) => {
     const data = JSON.stringify({ credential: response.credential });
