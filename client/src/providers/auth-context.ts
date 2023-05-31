@@ -1,6 +1,14 @@
 import React from 'react';
 
 // Creating the context object and passing the default values.
-const authContext = React.createContext({ user: null });
+const user = {
+  email: '',
+  firstName: '',
+  lastName: '',
+  picture: '',
+  token: '',
+};
+
+const authContext = React.createContext({ user });
 
 export default authContext;

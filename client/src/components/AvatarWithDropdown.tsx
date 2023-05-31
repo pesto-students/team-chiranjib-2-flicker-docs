@@ -1,5 +1,7 @@
 import { CreditCard, LogOut, Settings, User } from 'lucide-react';
 
+import { useAuth } from '@/hooks';
+
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import {
   DropdownMenu,
@@ -12,12 +14,17 @@ import {
 } from './ui/dropdown-menu';
 
 export function AvatarWithDropdown() {
+  const { user } = useAuth();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar>
-          <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={user.picture} alt='@shadcn' />
+          <AvatarFallback>
+            {user.firstName.charAt(0)}
+            {user.lastName.charAt(0)}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
