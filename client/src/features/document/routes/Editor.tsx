@@ -5,12 +5,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Lock } from 'lucide-react';
 import randomColor from 'randomcolor';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import * as Y from 'yjs';
 
 import { AvatarWithDropdown, Button } from '@/components';
 import { FlickerDocsLogo } from '@/constants';
-import { useModal } from '@/hooks';
+import { useAuth, useModal } from '@/hooks';
 
 import { CustomToolbar } from '../components/CustomToolbar';
 import ShareModal from '../components/ShareModal';
@@ -48,9 +48,7 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 
 export const Editor = () => {
   const { id } = useParams();
-
-  const [searchParams] = useSearchParams();
-  const name: string = searchParams.get('name') || 'anonymous';
+  const { user } = useAuth();
 
   const { Modal, openModal, closeModal } = useModal();
 
@@ -70,7 +68,7 @@ export const Editor = () => {
       }),
       CollaborationCursor.configure({
         provider,
-        user: { name: name, color: randomColor() },
+        user: { name: user.firstName, color: randomColor() },
       }),
     ],
 

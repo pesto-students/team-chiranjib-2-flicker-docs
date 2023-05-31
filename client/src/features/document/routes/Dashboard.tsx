@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import uniqid from 'uniqid';
 
 import { Button, Header } from '@/components';
 
@@ -13,7 +14,7 @@ export const Dashboard = () => {
       <Header />
       <main>
         <div className='container px-28 py-8'>
-          <Button onClick={() => navigate('/editor/12342332')}>
+          <Button onClick={() => navigate(`/editor/${uniqid()}`)}>
             <Plus className='mr-2 h-4 w-4' />
             Start a new document
           </Button>
