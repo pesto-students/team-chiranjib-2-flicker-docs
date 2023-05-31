@@ -1,13 +1,11 @@
-import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router';
 
 import { SignUp } from '@/features/auth';
+import { useAuth } from '@/hooks';
+import { logout } from '@/lib';
 
 const Home = ({ user }: { user: any }) => {
-  const logout = () => {
-    localStorage.removeItem('user');
-    window.location.reload();
-  };
   return (
     <div style={{ textAlign: 'center', margin: '3rem' }}>
       <img src={user.picture} alt='phot' />
@@ -22,38 +20,28 @@ const Home = ({ user }: { user: any }) => {
 
 export const Landing = () => {
   const navigate = useNavigate();
-  // const { user } = useAuth();
 
-  // const handleStart = () => {
-  //   if (user) {
-  //     navigate('/app');
-  //   } else {
-  //     navigate('/auth/login');
-  //   }
-  // };
-
-  const [user, setUser] = useState({ email: '' });
-
-  useEffect(() => {
-    const theUser = localStorage.getItem('user');
-
-    if (theUser && !theUser.includes('undefined')) {
-      setUser(JSON.parse(theUser));
-    }
-  }, []);
+  const { user } = useAuth();
 
   return (
     <>
       <div className='flex flex-col items-center gap-4 pt-8'>
         <h1 className='text-4xl'>Landing page</h1>
         <button
-          onClick={() => navigate('/dashboard')}
+          onClick={() => {
+            if (user) {
+              navigate('/dashboard');
+            } else {
+              toast.error('You need to login first');
+            }
+          }}
           className='content-center rounded-md bg-black p-3 text-white'
         >
           Go to docs
         </button>
       </div>
-      {user?.email ? <Home user={user} /> : <SignUp />}
+      {user ? <Home user={user} /> : <SignUp />}
+      <Toaster position='top-center' reverseOrder={false} />
     </>
   );
 };

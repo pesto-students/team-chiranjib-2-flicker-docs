@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Suspense, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryClientProvider } from 'react-query';
@@ -6,8 +6,10 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { Button, Spinner } from '@/components/';
-// import { AuthProvider } from "@/lib/auth";
+import { loadUser } from '@/lib';
 import { queryClient } from '@/lib/react-query';
+
+import AuthContext from './auth-context';
 
 const ErrorFallback = () => {
   return (
@@ -28,8 +30,10 @@ type AppProviderProps = {
 };
 
 export const AppProvider = ({ children }: AppProviderProps) => {
+  const [user] = useState(() => loadUser());
+
   return (
-    <React.Suspense
+    <Suspense
       fallback={
         <div className='flex h-screen w-screen items-center justify-center'>
           <Spinner size='sm' />
@@ -41,12 +45,12 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           <QueryClientProvider client={queryClient}>
             {process.env.NODE_ENV !== 'test' && <ReactQueryDevtools />}
 
-            {/* <AuthProvider> */}
-            <Router>{children}</Router>
-            {/* </AuthProvider> */}
+            <AuthContext.Provider value={{ user }}>
+              <Router>{children}</Router>
+            </AuthContext.Provider>
           </QueryClientProvider>
         </HelmetProvider>
       </ErrorBoundary>
-    </React.Suspense>
+    </Suspense>
   );
 };

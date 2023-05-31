@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 
+import { login } from '@/lib';
+
 declare global {
   interface Window {
     google: any;
@@ -22,8 +24,7 @@ export const SignUp = () => {
       const axiosResponse = await axios.post(url, data, config);
 
       if (axiosResponse?.data?.user) {
-        localStorage.setItem('user', JSON.stringify(axiosResponse?.data?.user));
-        window.location.reload();
+        login(JSON.stringify(axiosResponse?.data?.user));
       }
     } catch (error) {
       console.log(error);
