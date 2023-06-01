@@ -6,4 +6,5 @@ export interface User {
   lastName: string;
   picture: string;
   token: string;
+  documents?: Array<string>;
 }

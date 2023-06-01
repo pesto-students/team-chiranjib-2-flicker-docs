@@ -35,7 +35,7 @@ export class AuthService {
 
       const profile = verificationResponse?.payload;
 
-      const user = {
+      const userData = {
         name: profile?.name,
         firstName: profile?.given_name,
         lastName: profile?.family_name,
@@ -43,16 +43,18 @@ export class AuthService {
         email: profile?.email,
       };
 
-      const findUser: User = await UserModel.findOne({ email: user.email });
+      const findUser: User = await UserModel.findOne({ email: userData.email });
 
       if (!findUser) {
-        await UserModel.create({
-          ...user,
+        const user = new UserModel({
+          ...userData,
         });
+
+        await user.save();
       }
 
       return {
-        ...user,
+        ...userData,
         token: sign({ email: profile?.email }, 'myScret', {
           expiresIn: '1d',
         }),

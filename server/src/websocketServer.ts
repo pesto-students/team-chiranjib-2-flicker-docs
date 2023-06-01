@@ -15,30 +15,39 @@ const base64ToUnit8Array = (base64string: string): Uint8Array => {
 
 const storeDocumentInDB = async (data: any) => {
   const bs = ToBase64(Y.encodeStateAsUpdate(data.document));
+  try {
+    const document = await DocumentModel.findOne({ name: data.documentName });
+    if (!document) {
+      const createDocData = new DocumentModel();
+      createDocData.name = data.documentName;
+      createDocData.data = bs;
+      createDocData.createdAt = new Date();
 
-  const response = await DocumentModel.find({ name: data.documentName });
-  if (!response[0]?.data) {
-    const createUserData = new DocumentModel();
-    createUserData.name = data.documentName;
-    createUserData.data = bs;
-
-    await createUserData.save();
-  } else {
-    await DocumentModel.updateOne({ name: data.documentName }, { data: bs });
+      await createDocData.save();
+    } else {
+      document.data = bs;
+      document.updatedAt = new Date();
+      await document.save();
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
 const loadDocumentFromDB = async (data: any) => {
-  const response = await DocumentModel.find({ name: data.documentName });
+  try {
+    const document = await DocumentModel.findOne({ name: data.documentName });
 
-  if (response[0]?.data) {
-    const uint8arr = base64ToUnit8Array(response[0]?.data);
-    const ydoc = new Y.Doc();
+    if (document.data) {
+      const uint8arr = base64ToUnit8Array(document.data);
+      const ydoc = new Y.Doc();
 
-    Y.applyUpdate(ydoc, uint8arr);
-    console.log(`document loaded ${data.documentName}`);
+      Y.applyUpdate(ydoc, uint8arr);
 
-    return ydoc;
+      return ydoc;
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 

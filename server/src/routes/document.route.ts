@@ -1,20 +1,22 @@
 import { Router } from 'express';
-import { TestController } from '@controllers/test.controller';
+
 // import { CreateUserDto } from '@dtos/users.dto';
 import { Routes } from '@interfaces/routes.interface';
+import { DocumentController } from '@/controllers/document.controller';
 // import { AuthMiddleware } from '@middlewares/auth.middleware';
 // import { ValidationMiddleware } from '@middlewares/validation.middleware';
 
-export class TestRoute implements Routes {
-  public path = '/test';
+export class DocumentRoute implements Routes {
+  public path = '/document';
   public router = Router();
-  public test = new TestController();
+  public documentController = new DocumentController();
 
   constructor() {
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, this.test.getData);
+    this.router.get(`${this.path}`, this.documentController.getDocs);
+    this.router.post(`${this.path}`, this.documentController.createDoc);
   }
 }

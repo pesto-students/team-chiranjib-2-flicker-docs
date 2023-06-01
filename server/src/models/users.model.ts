@@ -1,4 +1,4 @@
-import { model, Schema, Document } from 'mongoose';
+import mongoose, { model, Schema, Document } from 'mongoose';
 import { User } from '@interfaces/users.interface';
 
 const UserSchema: Schema = new Schema({
@@ -20,6 +20,12 @@ const UserSchema: Schema = new Schema({
   picture: {
     type: String,
   },
+  documents: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Document',
+    },
+  ],
 });
 
 export const UserModel = model<User & Document>('User', UserSchema);

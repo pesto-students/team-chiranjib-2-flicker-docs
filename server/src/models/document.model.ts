@@ -9,7 +9,15 @@ const DocumentSchema: Schema = new Schema({
   },
   data: {
     type: mongoose.SchemaTypes.Mixed,
-    required: true,
+  },
+  displayName: {
+    type: String,
+  },
+  createdAt: {
+    type: Date,
+  },
+  updatedAt: {
+    type: Date,
   },
 });
 
