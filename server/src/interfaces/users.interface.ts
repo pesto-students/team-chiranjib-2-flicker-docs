@@ -6,5 +6,5 @@ export interface User {
   lastName: string;
   picture: string;
   token: string;
-  documents: Array<string>;
+  documents?: Array<string>;
 }
