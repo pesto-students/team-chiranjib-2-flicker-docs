@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import uniqid from 'uniqid';
 
 import { Button, Header } from '@/components';
+import { API_URL } from '@/config';
 import { useAuth } from '@/hooks';
 
 import DocumentTabs from '../components/DocumentTabs';
@@ -13,7 +14,7 @@ export const Dashboard = () => {
   const { user } = useAuth();
   const createANewDocument = async () => {
     const docName = uniqid();
-    await axios.post(`${process.env.REACT_APP_API}/document`, {
+    await axios.post(`${API_URL}/document`, {
       user,
       docName,
     });

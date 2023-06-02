@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 
+import { API_URL, GOOGLE_CLIENT_ID } from '@/config';
 import { login } from '@/lib';
 
 declare global {
@@ -10,7 +11,7 @@ declare global {
 }
 
 export const SignUp = () => {
-  const url = `${process.env.REACT_APP_API}/auth/signin`;
+  const url = `${API_URL}/auth/signin`;
 
   const handleGoogle = async (response: any) => {
     const data = JSON.stringify({ credential: response.credential });
@@ -36,7 +37,7 @@ export const SignUp = () => {
 
     if (window.google) {
       window.google.accounts.id.initialize({
-        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogle,
       });
 
