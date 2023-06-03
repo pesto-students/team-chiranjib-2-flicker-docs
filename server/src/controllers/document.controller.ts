@@ -1,11 +1,11 @@
+import { NextFunction, Request, Response } from 'express';
+import { Container } from 'typedi';
+import mongoose from 'mongoose';
+
 import { HttpException } from '@/exceptions/httpException';
 import { DocumentModel } from '@/models/document.model';
 import { UserModel } from '@/models/users.model';
 import { DocumentService } from '@/services/document.service';
-import { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
-
-import { Container } from 'typedi';
 // import { User } from '@interfaces/users.interface';
 // import { TestService } from '@services/test.service';
 

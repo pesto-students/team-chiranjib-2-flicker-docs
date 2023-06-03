@@ -1,7 +1,9 @@
 import { User } from '@/interfaces/users.interface';
 import { DocumentModel } from '@/models/document.model';
 import { UserModel } from '@/models/users.model';
+import { Service } from 'typedi';
 
+@Service()
 export class DocumentService {
   public createDoc = async (docName: string, user: User) => {
     try {
