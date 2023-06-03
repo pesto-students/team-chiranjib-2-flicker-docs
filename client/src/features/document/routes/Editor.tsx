@@ -68,7 +68,7 @@ export const Editor = () => {
       }),
       CollaborationCursor.configure({
         provider,
-        user: { name: user.firstName, color: randomColor() },
+        user: { name: user?.firstName, color: randomColor() },
       }),
     ],
 

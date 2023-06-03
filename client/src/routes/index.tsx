@@ -15,7 +15,6 @@ const Pricing = () => {
 
 export const AppRoutes = () => {
   const { user } = useAuth();
-  console.log(user);
 
   const commonRoutes = [
     { path: '/', element: <Landing /> },

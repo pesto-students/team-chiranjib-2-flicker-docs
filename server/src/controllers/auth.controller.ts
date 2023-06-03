@@ -16,4 +16,15 @@ export class AuthController {
       next(error);
     }
   };
+
+  public getUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { authorization } = req.headers;
+      const signUpUserData: User = await this.auth.getUser(authorization);
+
+      res.status(201).json({ user: signUpUserData, message: 'user found' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

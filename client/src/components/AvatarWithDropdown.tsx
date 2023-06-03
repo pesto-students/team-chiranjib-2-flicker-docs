@@ -20,10 +20,10 @@ export function AvatarWithDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar>
-          <AvatarImage src={user.picture} alt='@shadcn' />
+          <AvatarImage src={user?.picture} alt='@shadcn' />
           <AvatarFallback>
-            {user.firstName.charAt(0)}
-            {user.lastName.charAt(0)}
+            {user?.firstName.charAt(0)}
+            {user?.lastName.charAt(0)}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

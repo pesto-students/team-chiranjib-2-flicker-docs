@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { useEffect } from 'react';
 
-import { login } from '@/lib';
+import { GOOGLE_CLIENT_ID } from '@/config';
+import { axiosClient, login } from '@/lib';
 
 declare global {
   interface Window {
@@ -10,21 +10,14 @@ declare global {
 }
 
 export const SignUp = () => {
-  const url = `${process.env.REACT_APP_API}/auth/signin`;
-
   const handleGoogle = async (response: any) => {
     const data = JSON.stringify({ credential: response.credential });
-    const config = {
-      headers: {
-        'content-type': 'application/json',
-      },
-    };
 
     try {
-      const axiosResponse = await axios.post(url, data, config);
+      const response = await axiosClient.post('/auth/signin', data);
 
-      if (axiosResponse?.data?.user) {
-        login(JSON.stringify(axiosResponse?.data?.user));
+      if (response?.data?.user) {
+        login(response?.data?.user?.token);
       }
     } catch (error) {
       console.log(error);
@@ -32,11 +25,9 @@ export const SignUp = () => {
   };
 
   useEffect(() => {
-    // /* global google */
-
     if (window.google) {
       window.google.accounts.id.initialize({
-        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogle,
       });
 
