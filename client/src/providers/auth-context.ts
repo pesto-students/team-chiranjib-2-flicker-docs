@@ -6,7 +6,6 @@ const user = {
   firstName: '',
   lastName: '',
   picture: '',
-  token: '',
 };
 
 const authContext = React.createContext({ user });
