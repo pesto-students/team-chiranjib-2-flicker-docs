@@ -1,30 +1,22 @@
 import { HttpException } from '@/exceptions/httpException';
 import { DocumentModel } from '@/models/document.model';
 import { UserModel } from '@/models/users.model';
+import { DocumentService } from '@/services/document.service';
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
-// import { Container } from 'typedi';
+
+import { Container } from 'typedi';
 // import { User } from '@interfaces/users.interface';
 // import { TestService } from '@services/test.service';
 
 export class DocumentController {
+  public controller = Container.get(DocumentService);
+
   public createDoc = async (req: Request, res: Response, next: NextFunction) => {
     const { docName, user } = req.body;
 
     try {
-      const createDocData = new DocumentModel({
-        name: docName,
-        displayName: 'new doc',
-        createdAt: new Date(),
-      });
-
-      const document = await createDocData.save();
-
-      const userData = await UserModel.findOne({ email: user.email });
-
-      userData.documents.push(document._id);
-      userData.save();
-
+      await this.controller.createDoc(docName, user);
       res.send();
     } catch (error) {
       next(error);
