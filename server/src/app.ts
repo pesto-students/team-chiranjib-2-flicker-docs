@@ -52,7 +52,11 @@ export class App {
       set('debug', true);
     }
 
-    await connect(dbConnection.url);
+    try {
+      await connect(dbConnection.url);
+    } catch (error) {
+      logger.error(error);
+    }
   }
 
   private initializeMiddlewares() {
