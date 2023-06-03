@@ -55,16 +55,22 @@ export function DocumentTabs() {
     isLoading,
     error,
     data: documents,
+    refetch,
   } = useQuery({
     queryKey: ['documentsData'],
     queryFn: () =>
       axiosClient.get<Response>(`/document`, {
         params: {
           user,
+          docType: activeTabIndex,
         },
       }),
     select: (res) => res.data.documents,
   });
+
+  useEffect(() => {
+    refetch();
+  }, [activeTabIndex]);
 
   if (error) return <div> could not fetch documents</div>;
 

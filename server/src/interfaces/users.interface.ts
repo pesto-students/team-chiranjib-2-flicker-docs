@@ -7,4 +7,5 @@ export interface User {
   picture: string;
   token: string;
   documents?: Array<string>;
+  sharedDocuments?: Array<string>;
 }

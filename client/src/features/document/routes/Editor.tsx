@@ -5,12 +5,14 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Lock } from 'lucide-react';
 import randomColor from 'randomcolor';
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import * as Y from 'yjs';
 
 import { AvatarWithDropdown, Button } from '@/components';
 import { FlickerDocsLogo } from '@/constants';
 import { useAuth, useModal } from '@/hooks';
+import { axiosClient } from '@/lib';
 
 import { CustomToolbar } from '../components/CustomToolbar';
 import ShareModal from '../components/ShareModal';
@@ -49,6 +51,7 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 export const Editor = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
 
   const { Modal, openModal, closeModal } = useModal();
 
@@ -79,6 +82,20 @@ export const Editor = () => {
       },
     },
   });
+
+  useEffect(() => {
+    const shared = searchParams.get('s');
+    if (shared) {
+      axiosClient
+        .post('/document/user', { documentName: id, userId: user?._id })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
 
   return (
     <>

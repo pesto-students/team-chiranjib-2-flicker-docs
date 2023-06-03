@@ -26,6 +26,12 @@ const UserSchema: Schema = new Schema({
       ref: 'Document',
     },
   ],
+  sharedDocuments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Document',
+    },
+  ],
 });
 
 export const UserModel = model<User & Document>('User', UserSchema);
