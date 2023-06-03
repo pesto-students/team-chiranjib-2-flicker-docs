@@ -1,5 +1,6 @@
 import { Lock, X } from 'lucide-react';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { Button, Input } from '@/components';
 
@@ -10,6 +11,21 @@ type Props = {
 
 const ShareModal = ({ closeModal, Modal }: Props) => {
   const [copied, setCopied] = useState(false);
+
+  const [searchParams] = useSearchParams();
+
+  const copyLinkButtonHandler = () => {
+    const shared = searchParams.get('s');
+    if (shared) {
+      navigator.clipboard.writeText(`${window.location.href}`);
+    } else {
+      navigator.clipboard.writeText(`${window.location.href}?s=1`);
+    }
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
 
   return (
     <Modal>
@@ -28,13 +44,7 @@ const ShareModal = ({ closeModal, Modal }: Props) => {
           <Button
             variant='outline'
             className='rounded-full border-blue-600 text-blue-600 hover:text-blue-700'
-            onClick={() => {
-              navigator.clipboard.writeText(window.location.href);
-              setCopied(true);
-              setTimeout(() => {
-                setCopied(false);
-              }, 2000);
-            }}
+            onClick={copyLinkButtonHandler}
           >
             {copied ? (
               'Copied'
