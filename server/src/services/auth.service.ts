@@ -1,4 +1,4 @@
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { Service } from 'typedi';
 
 import { HttpException } from '@exceptions/httpException';
@@ -60,5 +60,17 @@ export class AuthService {
         }),
       };
     }
+  }
+
+  public async getUser(token: any) {
+    const { email } = verify(token, 'myScret') as any;
+
+    const findUser: User = await UserModel.findOne({ email: email });
+
+    if (!findUser) {
+      throw new HttpException(409, 'User not found');
+    }
+
+    return findUser;
   }
 }
