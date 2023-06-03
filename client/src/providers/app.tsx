@@ -1,8 +1,8 @@
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Suspense, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { Button, Spinner } from '@/components/';
@@ -43,7 +43,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
-            {process.env.NODE_ENV !== 'test' && <ReactQueryDevtools />}
+            {process.env.NODE_ENV !== 'test' && <ReactQueryDevtools initialIsOpen={false} />}
 
             <AuthContext.Provider value={{ user }}>
               <Router>{children}</Router>
