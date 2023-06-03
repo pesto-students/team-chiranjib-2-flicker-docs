@@ -37,7 +37,7 @@ const storeDocumentInDB = async (data: any) => {
 const loadDocumentFromDB = async (data: any) => {
   try {
     const document = await DocumentModel.findOne({ name: data.documentName });
-
+console.log(document, "document")
     if (document.data) {
       const uint8arr = base64ToUnit8Array(document.data);
       const ydoc = new Y.Doc();

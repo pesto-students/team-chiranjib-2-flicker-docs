@@ -20,8 +20,10 @@ export class DocumentController {
 
       const userData = await UserModel.findOne({ email: user.email });
 
-      userData.documents.push(document._id);
-      userData.save();
+      if (userData?.documents?.length > 0) {
+        userData.documents.push(document._id);
+        userData.save();
+      }
 
       res.send();
     } catch (error) {
