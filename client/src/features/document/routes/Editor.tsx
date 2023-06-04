@@ -53,7 +53,7 @@ export const Editor = () => {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
 
-  const { Modal, openModal, closeModal } = useModal();
+  const { isOpen, openModal, closeModal } = useModal();
 
   const ydoc = new Y.Doc();
 
@@ -113,7 +113,7 @@ export const Editor = () => {
           {/* <div className="h-[50%] w-[100%] bg-white rounded-md"></div> */}
         </div>
       </div>
-      <ShareModal closeModal={closeModal} Modal={Modal} />
+      {isOpen ? <ShareModal closeModal={closeModal} isOpen={isOpen} /> : null}
     </>
   );
 };
