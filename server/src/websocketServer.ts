@@ -62,22 +62,22 @@ const server = new Hocuspocus({
     return loadDocumentFromDB(data);
   },
 
-  async connected() {
-    console.log('connections:', server.getConnectionsCount());
-  },
-  async onConfigure() {
-    console.log(`Server was configured!`);
-  },
-  async onConnect(data) {
-    console.log(`New websocket connection ${data.documentName}`);
-  },
-  async onDestroy() {
-    console.log(`Server was shut down!`);
-  },
-  async onDisconnect(data) {
-    // console.log(`"${data.context.user.name}" has disconnected.`);
-    console.log(`disconnected.`);
-  },
+  // async connected() {
+  //   console.log('connections:', server.getConnectionsCount());
+  // },
+  // async onConfigure() {
+  //   console.log(`Server was configured!`);
+  // },
+  // async onConnect(data) {
+  //   // console.log(`New websocket connection ${data.documentName}`);
+  // },
+  // async onDestroy() {
+  //   console.log(`Server was shut down!`);
+  // },
+  // async onDisconnect(data) {
+  //   // console.log(`"${data.context.user.name}" has disconnected.`);
+  //   console.log(`disconnected.`);
+  // },
 });
 
 export default server;
