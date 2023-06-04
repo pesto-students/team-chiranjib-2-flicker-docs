@@ -53,7 +53,7 @@ const loadDocumentFromDB = async (data: any) => {
 
 const server = new Hocuspocus({
   port: 1234,
-  extensions: [new Logger()],
+  // extensions: [new Logger()],
   async onStoreDocument(data) {
     storeDocumentInDB(data);
   },

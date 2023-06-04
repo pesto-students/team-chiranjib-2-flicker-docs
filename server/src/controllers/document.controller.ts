@@ -55,4 +55,15 @@ export class DocumentController {
       next(error);
     }
   };
+  public shareDocumentByEmail = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, documentName } = req.body;
+
+    try {
+      const user = await this.controller.shareDocumentByEmail(email, documentName);
+
+      return res.send(user);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

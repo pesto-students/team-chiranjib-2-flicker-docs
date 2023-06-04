@@ -22,5 +22,7 @@ export class DocumentRoute implements Routes {
     this.router.post(`${this.path}/user`, this.documentController.addSharedDocumentToUser);
 
     this.router.get(`${this.path}/:docname/shared-users`, this.documentController.getSharedUsers);
+
+    this.router.post(`${this.path}/email/share`, this.documentController.shareDocumentByEmail);
   }
 }
