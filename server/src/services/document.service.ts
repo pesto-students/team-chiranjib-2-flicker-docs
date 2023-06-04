@@ -82,4 +82,20 @@ export class DocumentService {
     const [owners, sharedUsers] = await Promise.all([ownerPromise, sharedUsersPromise]);
     return { owners, sharedUsers };
   };
+
+  public shareDocumentByEmail = async (email: string, documentName: string) => {
+    const document = await DocumentModel.findOne({ name: documentName });
+
+    if (!document) throw new HttpException(404, 'Document not found');
+
+    const newUser = new UserModel({
+      name: email.split('@')[0],
+      email,
+      sharedDocuments: [document._id],
+    });
+
+    await newUser.save();
+
+    return newUser;
+  };
 }
