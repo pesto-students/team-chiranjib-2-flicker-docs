@@ -71,4 +71,15 @@ export class DocumentService {
     user.sharedDocuments.push(document._id);
     user.save();
   };
+
+  public getSharedUsers = async (documentName: string) => {
+    const document = await DocumentModel.findOne({ name: documentName });
+    if (!document) throw new HttpException(404, 'Document not found');
+
+    const ownerPromise = UserModel.find({ documents: document._id }).exec();
+    const sharedUsersPromise = UserModel.find({ sharedDocuments: document._id }).exec();
+
+    const [owners, sharedUsers] = await Promise.all([ownerPromise, sharedUsersPromise]);
+    return { owners, sharedUsers };
+  };
 }

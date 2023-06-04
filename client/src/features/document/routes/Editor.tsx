@@ -49,7 +49,7 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 };
 
 export const Editor = () => {
-  const { id } = useParams();
+  const { id: docName } = useParams();
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
 
@@ -59,7 +59,7 @@ export const Editor = () => {
 
   const provider = new HocuspocusProvider({
     url: 'ws://127.0.0.1:1234',
-    name: id || 'default',
+    name: docName || 'default',
     document: ydoc,
   });
 
@@ -87,7 +87,7 @@ export const Editor = () => {
     const shared = searchParams.get('s');
     if (shared) {
       axiosClient
-        .post('/document/user', { documentName: id, userId: user?._id })
+        .post('/document/user', { documentName: docName, userId: user?._id })
         .then((res) => {
           console.log(res);
         })

@@ -43,4 +43,16 @@ export class DocumentController {
       next(error);
     }
   };
+
+  public getSharedUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { docname } = req.params;
+
+    try {
+      const users = await this.controller.getSharedUsers(docname);
+
+      return res.send(users);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
