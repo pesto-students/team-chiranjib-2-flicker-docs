@@ -63,7 +63,7 @@ const ShareModal = ({ closeModal, Modal }: Props) => {
   return (
     <Modal>
       <div className='flex h-[360px] w-[600px] flex-col justify-between rounded-md bg-white'>
-        <div className='flex h-[50px] items-center justify-between border-b-2 border-slate-100 px-6'>
+        <div className='flex h-[100px] items-center justify-between border-b-2 border-slate-100 px-6'>
           <p>Share</p>
           <button onClick={closeModal} className=' rounded-full p-1 hover:bg-slate-100'>
             <X />
