@@ -3,6 +3,7 @@ import { Logger } from '@hocuspocus/extension-logger';
 import { DocumentModel } from './models/document.model';
 
 import Y from 'yjs';
+import { logger } from './utils/logger';
 
 const ToBase64 = function (u8: Uint8Array): string {
   return btoa(String.fromCharCode.apply(null, u8));
@@ -53,7 +54,7 @@ const loadDocumentFromDB = async (data: any) => {
 
 const server = new Hocuspocus({
   port: 1234,
-  // extensions: [new Logger()],
+  extensions: [new Logger()],
   async onStoreDocument(data) {
     storeDocumentInDB(data);
   },
@@ -62,22 +63,21 @@ const server = new Hocuspocus({
     return loadDocumentFromDB(data);
   },
 
-  // async connected() {
-  //   console.log('connections:', server.getConnectionsCount());
-  // },
-  // async onConfigure() {
-  //   console.log(`Server was configured!`);
-  // },
-  // async onConnect(data) {
-  //   // console.log(`New websocket connection ${data.documentName}`);
-  // },
-  // async onDestroy() {
-  //   console.log(`Server was shut down!`);
-  // },
-  // async onDisconnect(data) {
-  //   // console.log(`"${data.context.user.name}" has disconnected.`);
-  //   console.log(`disconnected.`);
-  // },
+  async connected() {
+    logger.info('connections:', server.getConnectionsCount());
+  },
+  async onConfigure() {
+    logger.info(`Server was configured!`);
+  },
+  async onConnect(data) {
+    logger.info(`New websocket connection ${data.documentName}`);
+  },
+  async onDestroy() {
+    logger.info(`Server was shut down!`);
+  },
+  async onDisconnect(data) {
+    logger.info(`"user from ${data.documentName}" has disconnected.`);
+  },
 });
 
 export default server;
