@@ -5,11 +5,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Lock } from 'lucide-react';
 import randomColor from 'randomcolor';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import * as Y from 'yjs';
 
 import { AvatarWithDropdown, Button } from '@/components';
+import { WEBSOCKET_API_URL } from '@/config';
 import { FlickerDocsLogo } from '@/constants';
 import { useAuth, useModal } from '@/hooks';
 import { axiosClient } from '@/lib';
@@ -55,16 +56,23 @@ export const Editor = () => {
 
   const { isOpen, openModal, closeModal } = useModal();
 
-  const ydoc = new Y.Doc();
+  const ydoc = useMemo(() => new Y.Doc(), []);
 
-  const provider = new HocuspocusProvider({
-    url: 'ws://127.0.0.1:1234',
-    name: docName || 'default',
-    document: ydoc,
-  });
+  const provider = useMemo(
+    () =>
+      new HocuspocusProvider({
+        url: WEBSOCKET_API_URL,
+        name: docName || 'default',
+        document: ydoc,
+        onAwarenessChange: (awareness) => {
+          console.log(awareness);
+        },
+      }),
+    [docName, ydoc]
+  );
 
-  const editor = useEditor({
-    extensions: [
+  const extensions = useMemo(
+    () => [
       StarterKit,
       Collaboration.configure({
         document: ydoc,
@@ -74,7 +82,11 @@ export const Editor = () => {
         user: { name: user?.firstName, color: randomColor() },
       }),
     ],
+    [provider, user?.firstName, ydoc]
+  );
 
+  const editor = useEditor({
+    extensions,
     editorProps: {
       attributes: {
         class:
@@ -86,16 +98,9 @@ export const Editor = () => {
   useEffect(() => {
     const shared = searchParams.get('s');
     if (shared) {
-      axiosClient
-        .post('/document/user', { documentName: docName, userId: user?._id })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      axiosClient.post('/document/user', { documentName: docName, userId: user?._id });
     }
-  }, []);
+  }, [docName, searchParams, user?._id]);
 
   return (
     <>
@@ -117,3 +122,5 @@ export const Editor = () => {
     </>
   );
 };
+
+// https://tiptap.dev/guide/custom-extensions
