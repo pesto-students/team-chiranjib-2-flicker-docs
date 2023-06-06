@@ -3,7 +3,6 @@ import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import axios from 'axios';
 import { Lock, Send } from 'lucide-react';
 import randomColor from 'randomcolor';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -11,12 +10,13 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import * as Y from 'yjs';
 
 import { Avatar, AvatarFallback, AvatarImage, AvatarWithDropdown, Button } from '@/components';
-import { OPENAI_API_KEY, WEBSOCKET_API_URL } from '@/config';
+import { WEBSOCKET_API_URL } from '@/config';
 import { FlickerDocsLogo } from '@/constants';
 import { useAuth, useModal } from '@/hooks';
 import { User } from '@/interfaces/user.interface';
 import { axiosClient } from '@/lib';
 
+import { fetchDataFromOpenAiApi } from '../api/chat';
 import { CustomToolbar } from '../components/CustomToolbar';
 import ShareModal from '../components/ShareModal';
 
@@ -128,9 +128,11 @@ export const Editor = () => {
     }
   }, [docName, searchParams, user?._id]);
 
-  const fetchData = () => {
+  const fetchData = async () => {
     setIsLoading(true);
+
     let question = '';
+
     if (textRef.current.length) {
       question = `${prompt}: "${textRef.current}"`;
     } else {
@@ -141,28 +143,13 @@ export const Editor = () => {
     editor?.commands.setTextSelection({ from: 0, to: 0 });
     setQuestion(question);
 
-    axios
-      .post(
-        'https://api.openai.com/v1/chat/completions',
-        {
-          model: 'gpt-3.5-turbo',
-          messages: [{ role: 'user', content: question }],
-        },
-
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${OPENAI_API_KEY}`,
-          },
-        }
-      )
-      .then((response) => {
-        setIsLoading(false);
-        setAIAssistantResponse(response.data.choices[0].message.content);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      const response = await fetchDataFromOpenAiApi(question);
+      setIsLoading(false);
+      setAIAssistantResponse(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
