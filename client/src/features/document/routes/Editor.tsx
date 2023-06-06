@@ -68,7 +68,6 @@ export const Editor = () => {
         name: docName || 'default',
         document: ydoc,
         onAwarenessChange: (awareness) => {
-          console.log(awareness);
           setActiveUsers(awareness.states.map((state) => state.user));
         },
       }),
@@ -92,7 +91,7 @@ export const Editor = () => {
         },
       }),
     ],
-    [provider, user?.firstName, ydoc]
+    [provider, user?._id, user?.firstName, user?.lastName, user?.picture, ydoc]
   );
 
   const editor = useEditor({
@@ -130,7 +129,7 @@ export const Editor = () => {
           <div className='flex h-[50%] w-[100%] flex-col gap-3 overflow-y-auto rounded-md bg-white p-3'>
             {activeUsers.map((user) => (
               <div key={user._id} className='flex items-center gap-3'>
-                <Avatar>
+                <Avatar className='h-8 w-8'>
                   <AvatarImage src={user?.picture} alt='@shadcn' />
                   <AvatarFallback>
                     {user?.name.charAt(0)}
