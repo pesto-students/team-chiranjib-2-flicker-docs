@@ -3,53 +3,26 @@ import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { Lock } from 'lucide-react';
 import randomColor from 'randomcolor';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import * as Y from 'yjs';
 
-import { AvatarWithDropdown, Button } from '@/components';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components';
 import { WEBSOCKET_API_URL } from '@/config';
-import { FlickerDocsLogo } from '@/constants';
 import { useAuth, useModal } from '@/hooks';
+import { User } from '@/interfaces/user.interface';
 import { axiosClient } from '@/lib';
 
-import { CustomToolbar } from '../components/CustomToolbar';
+import { Chat } from '../components/Chat';
+import { EditorHeader } from '../components/EditorHeader';
 import ShareModal from '../components/ShareModal';
 
-const Header = ({ openModal }: { openModal: () => void }) => {
-  return (
-    <div className='flex h-[15vh] flex-col justify-between py-3 pe-8 ps-8'>
-      <div className='flex justify-between'>
-        <div className='flex gap-3'>
-          <div>
-            <FlickerDocsLogo />
-          </div>
-          <div className='flex flex-col justify-between'>
-            <h4 className='text-lg font-semibold leading-none text-slate-600'>Doc name</h4>
-            <div className='flex gap-2 text-xs leading-none text-slate-600'>
-              <p>File</p>
-              <p>Edit</p>
-              <p>View</p>
-            </div>
-          </div>
-        </div>
-
-        <div className='flex items-center gap-6'>
-          <Button onClick={openModal}>
-            <Lock className='mr-2 h-4 w-4' /> Share
-          </Button>
-
-          <AvatarWithDropdown />
-        </div>
-      </div>
-      <CustomToolbar />
-    </div>
-  );
-};
-
 export const Editor = () => {
+  const [activeUsers, setActiveUsers] = useState<User[]>([]);
+
+  const textRef = useRef<string>('');
+
   const { id: docName } = useParams();
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
@@ -65,7 +38,7 @@ export const Editor = () => {
         name: docName || 'default',
         document: ydoc,
         onAwarenessChange: (awareness) => {
-          console.log(awareness);
+          setActiveUsers(awareness.states.map((state) => state.user));
         },
       }),
     [docName, ydoc]
@@ -79,10 +52,16 @@ export const Editor = () => {
       }),
       CollaborationCursor.configure({
         provider,
-        user: { name: user?.firstName, color: randomColor() },
+        user: {
+          name: user?.firstName,
+          color: randomColor(),
+          id: user?._id,
+          lastName: user?.lastName,
+          picture: user?.picture,
+        },
       }),
     ],
-    [provider, user?.firstName, ydoc]
+    [provider, user?._id, user?.firstName, user?.lastName, user?.picture, ydoc]
   );
 
   const editor = useEditor({
@@ -95,16 +74,30 @@ export const Editor = () => {
     },
   });
 
+  editor?.captureTransaction(() => {
+    const { view, state } = editor;
+    const { from, to } = view.state.selection;
+    const text = state.doc.textBetween(from, to, '');
+    textRef.current = text;
+  });
+
   useEffect(() => {
     const shared = searchParams.get('s');
     if (shared) {
-      axiosClient.post('/document/user', { documentName: docName, userId: user?._id });
+      axiosClient
+        .post('/document/user', { documentName: docName, userId: user?._id })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     }
   }, [docName, searchParams, user?._id]);
 
+  const resetEditorSelection = () => {
+    editor?.commands.setTextSelection({ from: 0, to: 0 });
+  };
+
   return (
     <>
-      <Header openModal={openModal} />
+      <EditorHeader openModal={openModal} />
       <div className='flex justify-center gap-4 bg-slate-100 p-4'>
         <EditorContent
           editor={editor}
@@ -114,13 +107,27 @@ export const Editor = () => {
           }}
         />
         <div className='flex w-1/5 flex-col gap-6'>
-          <div className='h-[50%] w-[100%] rounded-md bg-white p-2'></div>
-          {/* <div className="h-[50%] w-[100%] bg-white rounded-md"></div> */}
+          <div className='flex h-[40%] w-[100%] flex-col gap-3 overflow-y-auto rounded-md bg-white p-3'>
+            {activeUsers.map((user) => (
+              <div key={user._id} className='flex items-center gap-3'>
+                <Avatar className='h-8 w-8'>
+                  <AvatarImage src={user?.picture} alt='@shadcn' />
+                  <AvatarFallback>
+                    {user?.name.charAt(0)}
+                    {user?.lastName.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className='capitalize'>{`${user.name.toLowerCase()}  ${user.lastName.toLowerCase()}`}</div>
+              </div>
+            ))}
+          </div>
+          <div className='flex h-[60%] w-[100%] flex-col justify-between rounded-md bg-white p-3'>
+            <h4 className='text-md mb-2 text-center text-slate-600'>AI Assistant</h4>
+            <Chat selectedText={textRef.current} resetEditorSelection={resetEditorSelection} />
+          </div>
         </div>
       </div>
       {isOpen ? <ShareModal closeModal={closeModal} isOpen={isOpen} /> : null}
     </>
   );
 };
-
-// https://tiptap.dev/guide/custom-extensions
