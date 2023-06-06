@@ -7,7 +7,7 @@ type ChatTextSelectionProps = {
   prompt: string;
 };
 
-export const ChatTextSelection = ({
+const ChatTextSelection = ({
   selectedText,
   setPrompt,
   fetchData,
@@ -44,7 +44,8 @@ type ConversationProps = {
   setPrompt: (value: string) => void;
   fetchData: () => void;
 };
-export const Conversation = ({
+
+const Conversation = ({
   question,
   isLoading,
   aiAssistantResponse,
@@ -84,6 +85,48 @@ export const Conversation = ({
 
         <Send className='rotate-45 cursor-pointer text-slate-600' onClick={fetchData} />
       </div>
+    </>
+  );
+};
+
+type ChatProps = {
+  selectedText: string;
+  setPrompt: (value: string) => void;
+  fetchData: () => void;
+  prompt: string;
+  question: string;
+  isLoading: boolean;
+  aiAssistantResponse: string;
+};
+
+export const Chat = ({
+  selectedText,
+  setPrompt,
+  fetchData,
+  prompt,
+  question,
+  isLoading,
+  aiAssistantResponse,
+}: ChatProps) => {
+  return (
+    <>
+      {selectedText.length ? (
+        <ChatTextSelection
+          selectedText={selectedText}
+          setPrompt={setPrompt}
+          fetchData={fetchData}
+          prompt={prompt}
+        />
+      ) : (
+        <Conversation
+          question={question}
+          isLoading={isLoading}
+          aiAssistantResponse={aiAssistantResponse}
+          prompt={prompt}
+          setPrompt={setPrompt}
+          fetchData={fetchData}
+        />
+      )}
     </>
   );
 };

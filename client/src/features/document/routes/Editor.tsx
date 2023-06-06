@@ -17,7 +17,7 @@ import { User } from '@/interfaces/user.interface';
 import { axiosClient } from '@/lib';
 
 import { fetchDataFromOpenAiApi } from '../api/chat';
-import { ChatTextSelection, Conversation } from '../components/Chat';
+import { Chat } from '../components/Chat';
 import { CustomToolbar } from '../components/CustomToolbar';
 import ShareModal from '../components/ShareModal';
 
@@ -180,23 +180,15 @@ export const Editor = () => {
             ))}
           </div>
           <div className='flex h-[50%] w-[100%] flex-col justify-end rounded-md bg-white p-3'>
-            {textRef.current.length ? (
-              <ChatTextSelection
-                selectedText={textRef.current}
-                setPrompt={setPrompt}
-                fetchData={fetchData}
-                prompt={prompt}
-              />
-            ) : (
-              <Conversation
-                question={question}
-                isLoading={isLoading}
-                aiAssistantResponse={aiAssistantResponse}
-                prompt={prompt}
-                setPrompt={setPrompt}
-                fetchData={fetchData}
-              />
-            )}
+            <Chat
+              selectedText={textRef.current}
+              question={question}
+              isLoading={isLoading}
+              aiAssistantResponse={aiAssistantResponse}
+              prompt={prompt}
+              setPrompt={setPrompt}
+              fetchData={fetchData}
+            />
           </div>
         </div>
       </div>
