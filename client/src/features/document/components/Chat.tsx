@@ -54,7 +54,7 @@ const ChatTextSelection = ({
         <div className='border-b p-2 text-sm'>Selected Text</div>
         <div className='p-2 text-sm'>{selectedText}</div>
       </div>
-      <div className='mt-2 flex items-center px-2'>
+      <div className='mt-3 flex items-center px-2'>
         <ChatForm
           fetchData={fetchData}
           setPrompt={setPrompt}
