@@ -165,7 +165,7 @@ export const Editor = () => {
           }}
         />
         <div className='flex w-1/5 flex-col gap-6'>
-          <div className='flex h-[50%] w-[100%] flex-col gap-3 overflow-y-auto rounded-md bg-white p-3'>
+          <div className='flex h-[40%] w-[100%] flex-col gap-3 overflow-y-auto rounded-md bg-white p-3'>
             {activeUsers.map((user) => (
               <div key={user._id} className='flex items-center gap-3'>
                 <Avatar className='h-8 w-8'>
@@ -179,7 +179,8 @@ export const Editor = () => {
               </div>
             ))}
           </div>
-          <div className='flex h-[50%] w-[100%] flex-col justify-end rounded-md bg-white p-3'>
+          <div className='flex h-[60%] w-[100%] flex-col justify-between rounded-md bg-white p-3'>
+            <h4 className='text-md mb-2 text-center text-slate-600'>AI Assistant</h4>
             <Chat
               selectedText={textRef.current}
               question={question}
