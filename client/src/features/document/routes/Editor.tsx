@@ -5,7 +5,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Lock } from 'lucide-react';
 import randomColor from 'randomcolor';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import * as Y from 'yjs';
 
@@ -52,6 +52,7 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 
 export const Editor = () => {
   const [activeUsers, setActiveUsers] = useState<User[]>([]);
+  const textRef = useRef<string>('');
 
   const { id: docName } = useParams();
   const { user } = useAuth();
@@ -104,6 +105,14 @@ export const Editor = () => {
     },
   });
 
+  editor?.captureTransaction(() => {
+    const { view, state } = editor;
+    const { from, to } = view.state.selection;
+    const text = state.doc.textBetween(from, to, '');
+
+    textRef.current = text;
+  });
+
   useEffect(() => {
     const shared = searchParams.get('s');
     if (shared) {
@@ -140,7 +149,7 @@ export const Editor = () => {
               </div>
             ))}
           </div>
-          {/* <div className="h-[50%] w-[100%] bg-white rounded-md"></div> */}
+          <div className='h-[50%] w-[100%] rounded-md bg-white'>{textRef.current}</div>
         </div>
       </div>
       {isOpen ? <ShareModal closeModal={closeModal} isOpen={isOpen} /> : null}
