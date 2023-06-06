@@ -3,14 +3,15 @@ import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { Lock } from 'lucide-react';
+import axios from 'axios';
+import { Lock, Send } from 'lucide-react';
 import randomColor from 'randomcolor';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import * as Y from 'yjs';
 
 import { Avatar, AvatarFallback, AvatarImage, AvatarWithDropdown, Button } from '@/components';
-import { WEBSOCKET_API_URL } from '@/config';
+import { OPENAI_API_KEY, WEBSOCKET_API_URL } from '@/config';
 import { FlickerDocsLogo } from '@/constants';
 import { useAuth, useModal } from '@/hooks';
 import { User } from '@/interfaces/user.interface';
@@ -53,6 +54,9 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 export const Editor = () => {
   const [activeUsers, setActiveUsers] = useState<User[]>([]);
   const textRef = useRef<string>('');
+  const [prompt, setPrompt] = useState<string>('');
+  const [aiAssistantResponse, setAIAssistantResponse] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { id: docName } = useParams();
   const { user } = useAuth();
@@ -123,6 +127,33 @@ export const Editor = () => {
     }
   }, [docName, searchParams, user?._id]);
 
+  const fetchData = async () => {
+    console.log(OPENAI_API_KEY);
+    console.log(textRef.current);
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: 'gpt-3.5-turbo',
+          messages: [{ role: 'user', content: `${prompt}: "${textRef.current}"` }],
+        },
+
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer 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`,
+          },
+        }
+      );
+      console.log(response.data.choices);
+      setIsLoading(false);
+      setAIAssistantResponse(response.data.choices[0].message.content);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Header openModal={openModal} />
@@ -149,12 +180,53 @@ export const Editor = () => {
               </div>
             ))}
           </div>
-          <div className='h-[50%] w-[100%] rounded-md bg-white'>{textRef.current}</div>
+          <div className='flex h-[50%] w-[100%] flex-col justify-end rounded-md bg-white p-3'>
+            {textRef.current.length ? (
+              <div className='flex h-[80%] flex-col rounded border-2 bg-slate-100 p-2'>
+                <div className='flex-1 overflow-y-auto rounded bg-white'>
+                  <div className='border-b p-2 text-sm'>Selected Text</div>
+                  <div className='p-2 text-sm'>{textRef.current}</div>
+                </div>
+                <div className='mt-2 flex items-center px-2'>
+                  <input
+                    type='text'
+                    name='prompt'
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    id=''
+                    className='w-full bg-transparent text-sm focus:outline-0'
+                    placeholder='Do something with selected text'
+                  />
+
+                  <Send className='rotate-45 text-slate-600' onClick={fetchData} />
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className='flex-1 overflow-y-auto '>
+                  <p>{textRef.current}</p>
+                  {isLoading ? <p>loading...</p> : <p>{aiAssistantResponse}</p>}
+                </div>
+
+                <div className='flex h-10 items-center rounded border-2 bg-slate-100 px-4'>
+                  <input
+                    type='text'
+                    name='prompt'
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    id=''
+                    className='w-full bg-transparent text-sm focus:outline-0'
+                    placeholder='Type message'
+                  />
+
+                  <Send className='rotate-45 text-slate-600' onClick={fetchData} />
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
       {isOpen ? <ShareModal closeModal={closeModal} isOpen={isOpen} /> : null}
     </>
   );
 };
-
-// https://tiptap.dev/guide/custom-extensions
