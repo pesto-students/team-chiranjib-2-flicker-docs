@@ -53,10 +53,12 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 
 export const Editor = () => {
   const [activeUsers, setActiveUsers] = useState<User[]>([]);
-  const textRef = useRef<string>('');
   const [prompt, setPrompt] = useState<string>('');
-  const [aiAssistantResponse, setAIAssistantResponse] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [question, setQuestion] = useState<string>('');
+  const [aiAssistantResponse, setAIAssistantResponse] = useState<string>('');
+
+  const textRef = useRef<string>('');
 
   const { id: docName } = useParams();
   const { user } = useAuth();
@@ -113,7 +115,6 @@ export const Editor = () => {
     const { view, state } = editor;
     const { from, to } = view.state.selection;
     const text = state.doc.textBetween(from, to, '');
-
     textRef.current = text;
   });
 
@@ -127,31 +128,41 @@ export const Editor = () => {
     }
   }, [docName, searchParams, user?._id]);
 
-  const fetchData = async () => {
-    console.log(OPENAI_API_KEY);
-    console.log(textRef.current);
+  const fetchData = () => {
     setIsLoading(true);
-    try {
-      const response = await axios.post(
+    let question = '';
+    if (textRef.current.length) {
+      question = `${prompt}: "${textRef.current}"`;
+    } else {
+      question = `${prompt}`;
+    }
+
+    setPrompt('');
+    editor?.commands.setTextSelection({ from: 0, to: 0 });
+    setQuestion(question);
+
+    axios
+      .post(
         'https://api.openai.com/v1/chat/completions',
         {
           model: 'gpt-3.5-turbo',
-          messages: [{ role: 'user', content: `${prompt}: "${textRef.current}"` }],
+          messages: [{ role: 'user', content: question }],
         },
 
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer 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`,
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
           },
         }
-      );
-      console.log(response.data.choices);
-      setIsLoading(false);
-      setAIAssistantResponse(response.data.choices[0].message.content);
-    } catch (error) {
-      console.log(error);
-    }
+      )
+      .then((response) => {
+        setIsLoading(false);
+        setAIAssistantResponse(response.data.choices[0].message.content);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -198,14 +209,26 @@ export const Editor = () => {
                     placeholder='Do something with selected text'
                   />
 
-                  <Send className='rotate-45 text-slate-600' onClick={fetchData} />
+                  <Send className='rotate-45 cursor-pointer text-slate-600' onClick={fetchData} />
                 </div>
               </div>
             ) : (
               <>
-                <div className='flex-1 overflow-y-auto '>
-                  <p>{textRef.current}</p>
-                  {isLoading ? <p>loading...</p> : <p>{aiAssistantResponse}</p>}
+                <div className='mb-2 flex-1 overflow-y-auto'>
+                  {question && (
+                    <div className='float-left  max-w-[80%] rounded-r-lg rounded-bl-lg bg-slate-200 p-2 text-sm'>
+                      {question}
+                    </div>
+                  )}
+                  {isLoading ? (
+                    <div className='float-right me-2 mt-2 h-4 w-[80%] rounded-l-lg rounded-br-lg bg-slate-100 p-2 text-sm'></div>
+                  ) : (
+                    aiAssistantResponse && (
+                      <div className='float-right me-2 mt-2 w-[80%] rounded-l-lg rounded-br-lg bg-slate-100 p-2 text-sm'>
+                        {aiAssistantResponse}
+                      </div>
+                    )
+                  )}
                 </div>
 
                 <div className='flex h-10 items-center rounded border-2 bg-slate-100 px-4'>
@@ -219,7 +242,7 @@ export const Editor = () => {
                     placeholder='Type message'
                   />
 
-                  <Send className='rotate-45 text-slate-600' onClick={fetchData} />
+                  <Send className='rotate-45 cursor-pointer text-slate-600' onClick={fetchData} />
                 </div>
               </>
             )}
