@@ -3,7 +3,7 @@ import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { Lock, Send } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import randomColor from 'randomcolor';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ import { User } from '@/interfaces/user.interface';
 import { axiosClient } from '@/lib';
 
 import { fetchDataFromOpenAiApi } from '../api/chat';
+import { ChatTextSelection, Conversation } from '../components/Chat';
 import { CustomToolbar } from '../components/CustomToolbar';
 import ShareModal from '../components/ShareModal';
 
@@ -180,58 +181,21 @@ export const Editor = () => {
           </div>
           <div className='flex h-[50%] w-[100%] flex-col justify-end rounded-md bg-white p-3'>
             {textRef.current.length ? (
-              <div className='flex h-[80%] flex-col rounded border-2 bg-slate-100 p-2'>
-                <div className='flex-1 overflow-y-auto rounded bg-white'>
-                  <div className='border-b p-2 text-sm'>Selected Text</div>
-                  <div className='p-2 text-sm'>{textRef.current}</div>
-                </div>
-                <div className='mt-2 flex items-center px-2'>
-                  <input
-                    type='text'
-                    name='prompt'
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    id=''
-                    className='w-full bg-transparent text-sm focus:outline-0'
-                    placeholder='Do something with selected text'
-                  />
-
-                  <Send className='rotate-45 cursor-pointer text-slate-600' onClick={fetchData} />
-                </div>
-              </div>
+              <ChatTextSelection
+                selectedText={textRef.current}
+                setPrompt={setPrompt}
+                fetchData={fetchData}
+                prompt={prompt}
+              />
             ) : (
-              <>
-                <div className='mb-2 flex-1 overflow-y-auto'>
-                  {question && (
-                    <div className='float-left  max-w-[80%] rounded-r-lg rounded-bl-lg bg-slate-200 p-2 text-sm'>
-                      {question}
-                    </div>
-                  )}
-                  {isLoading ? (
-                    <div className='float-right me-2 mt-2 h-4 w-[80%] rounded-l-lg rounded-br-lg bg-slate-100 p-2 text-sm'></div>
-                  ) : (
-                    aiAssistantResponse && (
-                      <div className='float-right me-2 mt-2 w-[80%] rounded-l-lg rounded-br-lg bg-slate-100 p-2 text-sm'>
-                        {aiAssistantResponse}
-                      </div>
-                    )
-                  )}
-                </div>
-
-                <div className='flex h-10 items-center rounded border-2 bg-slate-100 px-4'>
-                  <input
-                    type='text'
-                    name='prompt'
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    id=''
-                    className='w-full bg-transparent text-sm focus:outline-0'
-                    placeholder='Type message'
-                  />
-
-                  <Send className='rotate-45 cursor-pointer text-slate-600' onClick={fetchData} />
-                </div>
-              </>
+              <Conversation
+                question={question}
+                isLoading={isLoading}
+                aiAssistantResponse={aiAssistantResponse}
+                prompt={prompt}
+                setPrompt={setPrompt}
+                fetchData={fetchData}
+              />
             )}
           </div>
         </div>
