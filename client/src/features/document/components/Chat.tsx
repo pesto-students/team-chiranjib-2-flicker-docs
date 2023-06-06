@@ -3,10 +3,40 @@ import { useState } from 'react';
 
 import { fetchDataFromOpenAiApi } from '../api/chat';
 
+type ChatFormProps = {
+  setPrompt: (value: string) => void;
+  fetchData: (e: React.FormEvent<HTMLFormElement>) => void;
+  prompt: string;
+  placeholder?: string;
+};
+
+const ChatForm = ({
+  fetchData,
+  prompt,
+  setPrompt,
+  placeholder = 'Type message',
+}: ChatFormProps) => {
+  return (
+    <form onSubmit={(e) => fetchData(e)} className='flex w-full'>
+      <input
+        type='text'
+        name='prompt'
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        className='w-full bg-transparent text-sm focus:outline-0'
+        placeholder={placeholder}
+      />
+      <button type='submit'>
+        <Send className='h-5 rotate-45 cursor-pointer text-slate-600' />
+      </button>
+    </form>
+  );
+};
+
 type ChatTextSelectionProps = {
   selectedText: string;
   setPrompt: (value: string) => void;
-  fetchData: () => void;
+  fetchData: (e: React.FormEvent<HTMLFormElement>) => void;
   prompt: string;
 };
 
@@ -23,17 +53,12 @@ const ChatTextSelection = ({
         <div className='p-2 text-sm'>{selectedText}</div>
       </div>
       <div className='mt-2 flex items-center px-2'>
-        <input
-          type='text'
-          name='prompt'
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          id=''
-          className='w-full bg-transparent text-sm focus:outline-0'
+        <ChatForm
+          fetchData={fetchData}
+          setPrompt={setPrompt}
+          prompt={prompt}
           placeholder='Do something with selected text'
         />
-
-        <Send className='rotate-45 cursor-pointer text-slate-600' onClick={fetchData} />
       </div>
     </div>
   );
@@ -45,16 +70,16 @@ type ConversationProps = {
   aiAssistantResponse: string;
   prompt: string;
   setPrompt: (value: string) => void;
-  fetchData: () => void;
+  fetchData: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
 const Conversation = ({
   question,
   isLoading,
   aiAssistantResponse,
-  prompt,
-  setPrompt,
   fetchData,
+  setPrompt,
+  prompt,
 }: ConversationProps) => {
   return (
     <>
@@ -76,17 +101,7 @@ const Conversation = ({
       </div>
 
       <div className='flex h-10 items-center rounded border-2 bg-slate-100 px-4'>
-        <input
-          type='text'
-          name='prompt'
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          id=''
-          className='w-full bg-transparent text-sm focus:outline-0'
-          placeholder='Type message'
-        />
-
-        <Send className='rotate-45 cursor-pointer text-slate-600' onClick={fetchData} />
+        <ChatForm fetchData={fetchData} setPrompt={setPrompt} prompt={prompt} />
       </div>
     </>
   );
@@ -103,7 +118,8 @@ export const Chat = ({ selectedText, resetEditorSelection }: ChatProps) => {
   const [aiAssistantResponse, setAIAssistantResponse] = useState<string>('');
   const [prompt, setPrompt] = useState<string>('');
 
-  const fetchData = async () => {
+  const fetchData = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsLoading(true);
 
     let question = '';
