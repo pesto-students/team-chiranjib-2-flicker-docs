@@ -1,4 +1,7 @@
 import { Send } from 'lucide-react';
+import { useState } from 'react';
+
+import { fetchDataFromOpenAiApi } from '../api/chat';
 
 type ChatTextSelectionProps = {
   selectedText: string;
@@ -91,23 +94,39 @@ const Conversation = ({
 
 type ChatProps = {
   selectedText: string;
-  setPrompt: (value: string) => void;
-  fetchData: () => void;
-  prompt: string;
-  question: string;
-  isLoading: boolean;
-  aiAssistantResponse: string;
+  resetEditorSelection: () => void;
 };
 
-export const Chat = ({
-  selectedText,
-  setPrompt,
-  fetchData,
-  prompt,
-  question,
-  isLoading,
-  aiAssistantResponse,
-}: ChatProps) => {
+export const Chat = ({ selectedText, resetEditorSelection }: ChatProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [question, setQuestion] = useState<string>('');
+  const [aiAssistantResponse, setAIAssistantResponse] = useState<string>('');
+  const [prompt, setPrompt] = useState<string>('');
+
+  const fetchData = async () => {
+    setIsLoading(true);
+
+    let question = '';
+
+    if (selectedText.length) {
+      question = `${prompt}: "${selectedText}"`;
+    } else {
+      question = `${prompt}`;
+    }
+
+    setPrompt('');
+    resetEditorSelection();
+    setQuestion(question);
+
+    try {
+      const response = await fetchDataFromOpenAiApi(question);
+      setIsLoading(false);
+      setAIAssistantResponse(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {selectedText.length ? (

@@ -16,7 +16,6 @@ import { useAuth, useModal } from '@/hooks';
 import { User } from '@/interfaces/user.interface';
 import { axiosClient } from '@/lib';
 
-import { fetchDataFromOpenAiApi } from '../api/chat';
 import { Chat } from '../components/Chat';
 import { CustomToolbar } from '../components/CustomToolbar';
 import ShareModal from '../components/ShareModal';
@@ -54,10 +53,6 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 
 export const Editor = () => {
   const [activeUsers, setActiveUsers] = useState<User[]>([]);
-  const [prompt, setPrompt] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [question, setQuestion] = useState<string>('');
-  const [aiAssistantResponse, setAIAssistantResponse] = useState<string>('');
 
   const textRef = useRef<string>('');
 
@@ -129,28 +124,8 @@ export const Editor = () => {
     }
   }, [docName, searchParams, user?._id]);
 
-  const fetchData = async () => {
-    setIsLoading(true);
-
-    let question = '';
-
-    if (textRef.current.length) {
-      question = `${prompt}: "${textRef.current}"`;
-    } else {
-      question = `${prompt}`;
-    }
-
-    setPrompt('');
+  const resetEditorSelection = () => {
     editor?.commands.setTextSelection({ from: 0, to: 0 });
-    setQuestion(question);
-
-    try {
-      const response = await fetchDataFromOpenAiApi(question);
-      setIsLoading(false);
-      setAIAssistantResponse(response);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -181,15 +156,7 @@ export const Editor = () => {
           </div>
           <div className='flex h-[60%] w-[100%] flex-col justify-between rounded-md bg-white p-3'>
             <h4 className='text-md mb-2 text-center text-slate-600'>AI Assistant</h4>
-            <Chat
-              selectedText={textRef.current}
-              question={question}
-              isLoading={isLoading}
-              aiAssistantResponse={aiAssistantResponse}
-              prompt={prompt}
-              setPrompt={setPrompt}
-              fetchData={fetchData}
-            />
+            <Chat selectedText={textRef.current} resetEditorSelection={resetEditorSelection} />
           </div>
         </div>
       </div>
