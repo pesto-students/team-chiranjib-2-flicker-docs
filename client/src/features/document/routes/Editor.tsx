@@ -5,14 +5,15 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Lock } from 'lucide-react';
 import randomColor from 'randomcolor';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import * as Y from 'yjs';
 
-import { AvatarWithDropdown, Button } from '@/components';
+import { Avatar, AvatarFallback, AvatarImage, AvatarWithDropdown, Button } from '@/components';
 import { WEBSOCKET_API_URL } from '@/config';
 import { FlickerDocsLogo } from '@/constants';
 import { useAuth, useModal } from '@/hooks';
+import { User } from '@/interfaces/user.interface';
 import { axiosClient } from '@/lib';
 
 import { CustomToolbar } from '../components/CustomToolbar';
@@ -50,6 +51,8 @@ const Header = ({ openModal }: { openModal: () => void }) => {
 };
 
 export const Editor = () => {
+  const [activeUsers, setActiveUsers] = useState<User[]>([]);
+
   const { id: docName } = useParams();
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
@@ -66,6 +69,7 @@ export const Editor = () => {
         document: ydoc,
         onAwarenessChange: (awareness) => {
           console.log(awareness);
+          setActiveUsers(awareness.states.map((state) => state.user));
         },
       }),
     [docName, ydoc]
@@ -79,7 +83,13 @@ export const Editor = () => {
       }),
       CollaborationCursor.configure({
         provider,
-        user: { name: user?.firstName, color: randomColor() },
+        user: {
+          name: user?.firstName,
+          color: randomColor(),
+          id: user?._id,
+          lastName: user?.lastName,
+          picture: user?.picture,
+        },
       }),
     ],
     [provider, user?.firstName, ydoc]
@@ -98,7 +108,10 @@ export const Editor = () => {
   useEffect(() => {
     const shared = searchParams.get('s');
     if (shared) {
-      axiosClient.post('/document/user', { documentName: docName, userId: user?._id });
+      axiosClient
+        .post('/document/user', { documentName: docName, userId: user?._id })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     }
   }, [docName, searchParams, user?._id]);
 
@@ -114,7 +127,20 @@ export const Editor = () => {
           }}
         />
         <div className='flex w-1/5 flex-col gap-6'>
-          <div className='h-[50%] w-[100%] rounded-md bg-white p-2'></div>
+          <div className='flex h-[50%] w-[100%] flex-col gap-3 overflow-y-auto rounded-md bg-white p-3'>
+            {activeUsers.map((user) => (
+              <div key={user._id} className='flex items-center gap-3'>
+                <Avatar>
+                  <AvatarImage src={user?.picture} alt='@shadcn' />
+                  <AvatarFallback>
+                    {user?.name.charAt(0)}
+                    {user?.lastName.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className='capitalize'>{`${user.name.toLowerCase()}  ${user.lastName.toLowerCase()}`}</div>
+              </div>
+            ))}
+          </div>
           {/* <div className="h-[50%] w-[100%] bg-white rounded-md"></div> */}
         </div>
       </div>
