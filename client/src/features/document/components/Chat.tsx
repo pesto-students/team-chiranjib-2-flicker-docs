@@ -1,6 +1,8 @@
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 
+import { Skeleton } from '@/components';
+
 import { fetchDataFromOpenAiApi } from '../api/chat';
 
 type ChatFormProps = {
@@ -90,7 +92,7 @@ const Conversation = ({
           </div>
         )}
         {isLoading ? (
-          <div className='float-right me-2 mt-2 h-4 w-[80%] rounded-l-lg rounded-br-lg bg-slate-100 p-2 text-sm'></div>
+          <Skeleton className='float-right mt-2 h-8 w-[80%] rounded-l-lg rounded-br-lg' />
         ) : (
           aiAssistantResponse && (
             <div className='float-right me-2 mt-2 w-[80%] rounded-l-lg rounded-br-lg bg-slate-100 p-2 text-sm'>
