@@ -5,6 +5,7 @@ import { SettingsLayout } from '@/components/Layout/ProfileLayout';
 import { lazyImport } from '@/utils/lazyImport';
 const { Editor } = lazyImport(() => import('@/features/document'), 'Editor');
 const { Dashboard } = lazyImport(() => import('@/features/document'), 'Dashboard');
+const { Plans } = lazyImport(() => import('@/features/payment'), 'Plans');
 
 const Settings = () => {
   return (
@@ -60,6 +61,10 @@ export const protectedRoutes = [
   {
     path: '/editor/:id',
     element: <Editor />,
+  },
+  {
+    path: '/plans',
+    element: <Plans />,
   },
   {
     path: '/settings',
