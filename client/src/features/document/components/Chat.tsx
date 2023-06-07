@@ -1,7 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components';
 import { User } from '@/interfaces/user.interface';
 import { axiosClient } from '@/lib';
 
@@ -11,9 +19,9 @@ type SingleUserProps = {
 };
 
 const SingleUser = ({ user, isOnline }: SingleUserProps) => (
-  <div key={user._id} className='flex items-center gap-3'>
+  <div key={user._id} className='my-1 flex items-center gap-3'>
     <div className={`rounded-full  ${isOnline ? 'border-2 border-green-400' : ''} p-0.5`}>
-      <Avatar className={`h-8 w-8`}>
+      <Avatar className={`h-7 w-7`}>
         <AvatarImage src={user?.picture} alt='@shadcn' />
         <AvatarFallback>
           {user?.firstName.charAt(0)}
@@ -21,7 +29,7 @@ const SingleUser = ({ user, isOnline }: SingleUserProps) => (
         </AvatarFallback>
       </Avatar>
     </div>
-    <div className='capitalize'>{`${user.firstName.toLowerCase()}  ${user.lastName.toLowerCase()}`}</div>
+    <div className='text-sm capitalize'>{`${user.firstName.toLowerCase()}  ${user.lastName.toLowerCase()}`}</div>
   </div>
 );
 
@@ -79,7 +87,20 @@ type ChatProps = {
 };
 
 const Chat = ({ activeUsers }: ChatProps) => {
-  return <Peers activeUsers={activeUsers} />;
+  return (
+    <Tabs defaultValue='peers'>
+      <TabsList className='grid w-full grid-cols-2'>
+        <TabsTrigger value='peers'>Peers</TabsTrigger>
+        <TabsTrigger value='groupchat'>Chat</TabsTrigger>
+      </TabsList>
+      <TabsContent value='peers'>
+        <Peers activeUsers={activeUsers} />
+      </TabsContent>
+      <TabsContent value='groupchat'>
+        <div>Comming soon..</div>
+      </TabsContent>
+    </Tabs>
+  );
 };
 
 export default Chat;
