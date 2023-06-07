@@ -14,7 +14,7 @@ const SingleDocument = ({ displayName, createdAt, updatedAt, name }: SingleDocum
   return (
     <div className='h-64 overflow-hidden rounded-md border border-slate-200 shadow-sm hover:shadow-md'>
       <Link to={`/editor/${name}`}>
-        <div className='h-[70%]'></div>
+        <div className='h-[70%] bg-slate-50'></div>
       </Link>
       <div className='flex h-[30%] gap-2 border-t p-4'>
         <div className='flex h-full w-[90%] flex-col justify-between'>
