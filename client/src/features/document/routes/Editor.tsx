@@ -55,7 +55,8 @@ export const Editor = () => {
         user: {
           name: user?.firstName,
           color: randomColor(),
-          id: user?._id,
+          _id: user?._id,
+          firstName: user?.firstName,
           lastName: user?.lastName,
           picture: user?.picture,
         },
@@ -107,7 +108,7 @@ export const Editor = () => {
           }}
         />
         <div className='flex w-1/5 flex-col gap-6'>
-          <div className='flex h-[40%] w-[100%] flex-col gap-3 overflow-y-auto rounded-md bg-white p-3'>
+          <div className='flex h-[40%] w-[100%] flex-col gap-2 overflow-y-auto rounded-md bg-white p-3'>
             <Peers activeUsers={activeUsers} />
           </div>
           <div className='flex h-[60%] w-[100%] flex-col justify-between rounded-md bg-white p-3'>
