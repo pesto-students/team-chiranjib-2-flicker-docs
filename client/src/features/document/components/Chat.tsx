@@ -74,4 +74,12 @@ const Peers = ({ activeUsers }: PeersProps) => {
   );
 };
 
-export default Peers;
+type ChatProps = {
+  activeUsers: User[];
+};
+
+const Chat = ({ activeUsers }: ChatProps) => {
+  return <Peers activeUsers={activeUsers} />;
+};
+
+export default Chat;

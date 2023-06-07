@@ -14,8 +14,8 @@ import { User } from '@/interfaces/user.interface';
 import { axiosClient } from '@/lib';
 
 import { AiAssistant } from '../components/AiAssistant';
+import Chat from '../components/Chat';
 import { EditorHeader } from '../components/EditorHeader';
-import Peers from '../components/Peers';
 import ShareModal from '../components/ShareModal';
 
 export const Editor = () => {
@@ -109,7 +109,7 @@ export const Editor = () => {
         />
         <div className='flex w-1/5 flex-col gap-6'>
           <div className='flex h-[40%] w-[100%] flex-col gap-2 overflow-y-auto rounded-md bg-white p-3'>
-            <Peers activeUsers={activeUsers} />
+            <Chat activeUsers={activeUsers} />
           </div>
           <div className='flex h-[60%] w-[100%] flex-col justify-between rounded-md bg-white p-3'>
             <h4 className='text-md mb-2 text-center text-slate-600'>AI Assistant</h4>
