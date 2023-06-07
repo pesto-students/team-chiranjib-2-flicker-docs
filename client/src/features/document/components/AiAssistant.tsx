@@ -109,12 +109,12 @@ const Conversation = ({
   );
 };
 
-type ChatProps = {
+type AiAssistantProps = {
   selectedText: string;
   resetEditorSelection: () => void;
 };
 
-export const Chat = ({ selectedText, resetEditorSelection }: ChatProps) => {
+export const AiAssistant = ({ selectedText, resetEditorSelection }: AiAssistantProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>('');
   const [aiAssistantResponse, setAIAssistantResponse] = useState<string>('');

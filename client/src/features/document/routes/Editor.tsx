@@ -13,7 +13,7 @@ import { useAuth, useModal } from '@/hooks';
 import { User } from '@/interfaces/user.interface';
 import { axiosClient } from '@/lib';
 
-import { Chat } from '../components/Chat';
+import { AiAssistant } from '../components/AiAssistant';
 import { EditorHeader } from '../components/EditorHeader';
 import Peers from '../components/Peers';
 import ShareModal from '../components/ShareModal';
@@ -113,7 +113,10 @@ export const Editor = () => {
           </div>
           <div className='flex h-[60%] w-[100%] flex-col justify-between rounded-md bg-white p-3'>
             <h4 className='text-md mb-2 text-center text-slate-600'>AI Assistant</h4>
-            <Chat selectedText={textRef.current} resetEditorSelection={resetEditorSelection} />
+            <AiAssistant
+              selectedText={textRef.current}
+              resetEditorSelection={resetEditorSelection}
+            />
           </div>
         </div>
       </div>
