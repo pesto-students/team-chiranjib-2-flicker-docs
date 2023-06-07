@@ -33,6 +33,29 @@ export class DocumentController {
     }
   };
 
+  public getSingleDoc = async (req: Request, res: Response, next: NextFunction) => {
+    const { docName } = req.params;
+
+    try {
+      const document = await this.controller.getSingleDoc(docName);
+      return res.send(document);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateDocDisplayName = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const { documentDisplayName } = req.body;
+
+    try {
+      await this.controller.updateDocDisplayName(id, documentDisplayName);
+      return res.send('success');
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public addSharedDocumentToUser = async (req: Request, res: Response, next: NextFunction) => {
     const { userId, documentName } = req.body;
 

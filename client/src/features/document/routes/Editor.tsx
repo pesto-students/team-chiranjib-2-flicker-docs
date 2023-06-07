@@ -1,4 +1,5 @@
 import { HocuspocusProvider } from '@hocuspocus/provider';
+import { useQuery } from '@tanstack/react-query';
 import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -92,13 +93,22 @@ export const Editor = () => {
     }
   }, [docName, searchParams, user?._id]);
 
+  const { data: document } = useQuery({
+    queryKey: ['document'],
+    queryFn: () => {
+      return axiosClient.get(`/document/${docName}`);
+    },
+    select: (res) => res.data,
+    enabled: !!docName,
+  });
+
   const resetEditorSelection = () => {
     editor?.commands.setTextSelection({ from: 0, to: 0 });
   };
 
   return (
     <>
-      <EditorHeader openModal={openModal} />
+      <EditorHeader openModal={openModal} document={document} />
       <div className='flex justify-center gap-4 bg-slate-100 p-4'>
         <EditorContent
           editor={editor}
