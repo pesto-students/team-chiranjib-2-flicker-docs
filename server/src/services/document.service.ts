@@ -55,6 +55,25 @@ export class DocumentService {
     }
   };
 
+  public getSingleDoc = async (docName: string) => {
+    const doc = await DocumentModel.findOne({ name: docName });
+
+    if (!doc) throw new HttpException(404, 'Document not found');
+
+    return doc;
+  };
+
+  public updateDocDisplayName = async (id: string, newDocDisplayName: string) => {
+    const doc = await DocumentModel.findById(id);
+
+    if (!doc) throw new HttpException(404, 'Document not found');
+
+    doc.displayName = newDocDisplayName;
+    await doc.save();
+
+    return;
+  };
+
   public addSharedDocumentToUser = async (userId, documentName) => {
     const user = await UserModel.findById(userId);
     if (!user) throw new HttpException(404, 'User not found');

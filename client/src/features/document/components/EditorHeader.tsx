@@ -1,15 +1,44 @@
+import { useMutation } from '@tanstack/react-query';
 import { Lock } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
 
 import { AvatarWithDropdown, Button } from '@/components';
 import { FlickerDocsLogo } from '@/constants';
+import { Document } from '@/interfaces/user.interface';
+import { axiosClient } from '@/lib';
 
 import { CustomToolbar } from './CustomToolbar';
 
 type ModalProps = {
   openModal: () => void;
+  document: Document;
 };
 
-export const EditorHeader = ({ openModal }: ModalProps) => {
+export const EditorHeader = ({ openModal, document }: ModalProps) => {
+  const [docDisplayName, setDocDisplayName] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const mutation = useMutation({
+    mutationFn: (newDisplayName: string) => {
+      return axiosClient.put(`/document/${document._id}/display-name`, {
+        documentDisplayName: newDisplayName,
+      });
+    },
+    onSuccess: () => {
+      inputRef?.current?.blur();
+      toast.success('Document renamed successfully');
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error('Something went wrong');
+    },
+  });
+
+  useEffect(() => {
+    setDocDisplayName(document?.displayName || '');
+  }, [document?.displayName]);
+
   return (
     <div className='flex h-[15vh] flex-col justify-between py-3 pe-8 ps-8'>
       <div className='flex justify-between'>
@@ -18,7 +47,20 @@ export const EditorHeader = ({ openModal }: ModalProps) => {
             <FlickerDocsLogo />
           </div>
           <div className='flex flex-col justify-between'>
-            <h4 className='text-lg font-semibold leading-none text-slate-600'>Doc name</h4>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                inputRef?.current?.blur();
+              }}
+            >
+              <input
+                ref={inputRef}
+                className='text-lg font-semibold leading-none text-slate-600 focus:border focus:border-slate-400'
+                value={docDisplayName}
+                onChange={(e) => setDocDisplayName(e.target.value)}
+                onBlur={() => mutation.mutate(docDisplayName)}
+              />
+            </form>
             <div className='flex gap-2 text-xs leading-none text-slate-600'>
               <p>File</p>
               <p>Edit</p>
@@ -36,6 +78,7 @@ export const EditorHeader = ({ openModal }: ModalProps) => {
         </div>
       </div>
       <CustomToolbar />
+      <Toaster />
     </div>
   );
 };

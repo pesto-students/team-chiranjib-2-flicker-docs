@@ -9,3 +9,12 @@ export interface User {
   documents?: Array<string>;
   sharedDocuments?: Array<string>;
 }
+
+export interface Document {
+  _id?: string;
+  name: string;
+  displayName: string;
+  createdAt: Date;
+  updatedAt: Date;
+  data?: string;
+}
