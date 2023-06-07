@@ -1,169 +1,106 @@
-import { Send } from 'lucide-react';
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 
-import { Skeleton } from '@/components';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components';
+import { User } from '@/interfaces/user.interface';
+import { axiosClient } from '@/lib';
 
-import { fetchDataFromOpenAiApi } from '../api/chat';
-
-type ChatFormProps = {
-  setPrompt: (value: string) => void;
-  fetchData: (e: React.FormEvent<HTMLFormElement>) => void;
-  prompt: string;
-  placeholder?: string;
+type SingleUserProps = {
+  user: User;
+  isOnline: boolean;
 };
 
-const ChatForm = ({
-  fetchData,
-  prompt,
-  setPrompt,
-  placeholder = 'Type message',
-}: ChatFormProps) => {
-  return (
-    <form onSubmit={(e) => fetchData(e)} className='flex w-full'>
-      <input
-        type='text'
-        name='prompt'
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        className='w-full bg-transparent text-sm focus:outline-0'
-        placeholder={placeholder}
-      />
-      <button type='submit'>
-        <Send className='h-5 rotate-45 cursor-pointer text-slate-600' />
-      </button>
-    </form>
-  );
-};
-
-type ChatTextSelectionProps = {
-  selectedText: string;
-  setPrompt: (value: string) => void;
-  fetchData: (e: React.FormEvent<HTMLFormElement>) => void;
-  prompt: string;
-};
-
-const ChatTextSelection = ({
-  selectedText,
-  setPrompt,
-  fetchData,
-  prompt,
-}: ChatTextSelectionProps) => {
-  return (
-    <div className='flex h-[80%] flex-col rounded border-2 bg-slate-100 p-2'>
-      <div className='flex-1 overflow-y-auto rounded bg-white'>
-        <div className='border-b p-2 text-sm'>Selected Text</div>
-        <div className='p-2 text-sm'>{selectedText}</div>
-      </div>
-      <div className='mt-3 flex items-center px-2'>
-        <ChatForm
-          fetchData={fetchData}
-          setPrompt={setPrompt}
-          prompt={prompt}
-          placeholder='Do something with selected text'
-        />
-      </div>
+const SingleUser = ({ user, isOnline }: SingleUserProps) => (
+  <div key={user._id} className='my-1 flex items-center gap-3'>
+    <div className={`rounded-full  ${isOnline ? 'border-2 border-green-400' : ''} p-0.5`}>
+      <Avatar className={`h-7 w-7`}>
+        <AvatarImage src={user?.picture} alt='@shadcn' />
+        <AvatarFallback>
+          {user?.firstName.charAt(0)}
+          {user?.lastName.charAt(0)}
+        </AvatarFallback>
+      </Avatar>
     </div>
-  );
+    <div className='text-sm capitalize'>{`${user.firstName.toLowerCase()}  ${user.lastName.toLowerCase()}`}</div>
+  </div>
+);
+
+type PeersProps = {
+  activeUsers: User[];
 };
 
-type ConversationProps = {
-  question: string;
-  isLoading: boolean;
-  aiAssistantResponse: string;
-  prompt: string;
-  setPrompt: (value: string) => void;
-  fetchData: (e: React.FormEvent<HTMLFormElement>) => void;
-};
+const Peers = ({ activeUsers }: PeersProps) => {
+  const { id: docName } = useParams();
 
-const Conversation = ({
-  question,
-  isLoading,
-  aiAssistantResponse,
-  fetchData,
-  setPrompt,
-  prompt,
-}: ConversationProps) => {
+  const filterActiveUsers = (data: any) => {
+    const activeUsersIds: any = activeUsers.map(({ _id }) => _id);
+    const allUsers: any = [...data.owners, ...data.sharedUsers];
+
+    return allUsers.filter((user: any) => !activeUsersIds.includes(user._id));
+  };
+
+  const {
+    error,
+    data: offlineUsers,
+    refetch,
+  } = useQuery({
+    queryKey: ['sharedUsers'],
+    queryFn: () => {
+      return axiosClient.get(`/document/${docName}/shared-users`);
+    },
+    select: (res) => filterActiveUsers(res.data),
+    enabled: !!docName,
+  });
+
+  if (error)
+    return (
+      <>
+        <div>could not fetch active users</div>
+        <button className='text-blue-500' onClick={() => refetch()}>
+          Try again
+        </button>
+      </>
+    );
+
   return (
     <>
-      <div className='mb-2 flex-1 overflow-y-auto'>
-        {question && (
-          <div className='float-left  max-w-[80%] rounded-r-lg rounded-bl-lg bg-slate-200 p-2 text-sm'>
-            {question}
-          </div>
-        )}
-        {isLoading ? (
-          <Skeleton className='float-right mt-2 h-8 w-[80%] rounded-l-lg rounded-br-lg' />
-        ) : (
-          aiAssistantResponse && (
-            <div className='float-right me-2 mt-2 w-[80%] rounded-l-lg rounded-br-lg bg-slate-100 p-2 text-sm'>
-              {aiAssistantResponse}
-            </div>
-          )
-        )}
-      </div>
-
-      <div className='flex h-10 items-center rounded border-2 bg-slate-100 px-4'>
-        <ChatForm fetchData={fetchData} setPrompt={setPrompt} prompt={prompt} />
-      </div>
+      {activeUsers.map((user: any) => (
+        <SingleUser key={user._id} user={user} isOnline={true} />
+      ))}
+      {offlineUsers?.map((user: any) => (
+        <SingleUser key={user._id} user={user} isOnline={false} />
+      ))}
     </>
   );
 };
 
 type ChatProps = {
-  selectedText: string;
-  resetEditorSelection: () => void;
+  activeUsers: User[];
 };
 
-export const Chat = ({ selectedText, resetEditorSelection }: ChatProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [question, setQuestion] = useState<string>('');
-  const [aiAssistantResponse, setAIAssistantResponse] = useState<string>('');
-  const [prompt, setPrompt] = useState<string>('');
-
-  const fetchData = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    let question = '';
-
-    if (selectedText.length) {
-      question = `${prompt}: "${selectedText}"`;
-    } else {
-      question = `${prompt}`;
-    }
-
-    setPrompt('');
-    resetEditorSelection();
-    setQuestion(question);
-
-    try {
-      const response = await fetchDataFromOpenAiApi(question);
-      setIsLoading(false);
-      setAIAssistantResponse(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+const Chat = ({ activeUsers }: ChatProps) => {
   return (
-    <>
-      {selectedText.length ? (
-        <ChatTextSelection
-          selectedText={selectedText}
-          setPrompt={setPrompt}
-          fetchData={fetchData}
-          prompt={prompt}
-        />
-      ) : (
-        <Conversation
-          question={question}
-          isLoading={isLoading}
-          aiAssistantResponse={aiAssistantResponse}
-          prompt={prompt}
-          setPrompt={setPrompt}
-          fetchData={fetchData}
-        />
-      )}
-    </>
+    <Tabs defaultValue='peers'>
+      <TabsList className='grid w-full grid-cols-2'>
+        <TabsTrigger value='peers'>Peers</TabsTrigger>
+        <TabsTrigger value='groupchat'>Chat</TabsTrigger>
+      </TabsList>
+      <TabsContent value='peers'>
+        <Peers activeUsers={activeUsers} />
+      </TabsContent>
+      <TabsContent value='groupchat'>
+        <div>Comming soon..</div>
+      </TabsContent>
+    </Tabs>
   );
 };
+
+export default Chat;
