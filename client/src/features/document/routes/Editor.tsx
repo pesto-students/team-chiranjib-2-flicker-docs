@@ -8,7 +8,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import * as Y from 'yjs';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components';
 import { WEBSOCKET_API_URL } from '@/config';
 import { useAuth, useModal } from '@/hooks';
 import { User } from '@/interfaces/user.interface';
@@ -16,6 +15,7 @@ import { axiosClient } from '@/lib';
 
 import { Chat } from '../components/Chat';
 import { EditorHeader } from '../components/EditorHeader';
+import Peers from '../components/Peers';
 import ShareModal from '../components/ShareModal';
 
 export const Editor = () => {
@@ -108,18 +108,7 @@ export const Editor = () => {
         />
         <div className='flex w-1/5 flex-col gap-6'>
           <div className='flex h-[40%] w-[100%] flex-col gap-3 overflow-y-auto rounded-md bg-white p-3'>
-            {activeUsers.map((user) => (
-              <div key={user._id} className='flex items-center gap-3'>
-                <Avatar className='h-8 w-8'>
-                  <AvatarImage src={user?.picture} alt='@shadcn' />
-                  <AvatarFallback>
-                    {user?.name.charAt(0)}
-                    {user?.lastName.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className='capitalize'>{`${user.name.toLowerCase()}  ${user.lastName.toLowerCase()}`}</div>
-              </div>
-            ))}
+            <Peers activeUsers={activeUsers} />
           </div>
           <div className='flex h-[60%] w-[100%] flex-col justify-between rounded-md bg-white p-3'>
             <h4 className='text-md mb-2 text-center text-slate-600'>AI Assistant</h4>
