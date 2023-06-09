@@ -1,57 +1,17 @@
-import { Suspense } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+// import { Suspense } from 'react';
+// import { Outlet } from 'react-router-dom';
 
-import { SettingsLayout } from '@/components/Layout/ProfileLayout';
+// import { SettingsLayout } from '@/components/Layout/ProfileLayout';
 import { lazyImport } from '@/utils/lazyImport';
 const { Editor } = lazyImport(() => import('@/features/document'), 'Editor');
 const { Dashboard } = lazyImport(() => import('@/features/document'), 'Dashboard');
 const { Plans } = lazyImport(() => import('@/features/payment'), 'Plans');
+const { Success } = lazyImport(() => import('@/features/payment'), 'Success');
+const { Cancel } = lazyImport(() => import('@/features/payment'), 'Cancel');
 
-const Settings = () => {
-  return (
-    <SettingsLayout>
-      <Suspense
-        fallback={
-          <div className='flex h-full w-full items-center justify-center'>
-            {/* <Spinner size="sm" /> */}
-          </div>
-        }
-      >
-        <Outlet />
-      </Suspense>
-    </SettingsLayout>
-  );
-};
-
-const Profile = () => {
-  const navigate = useNavigate();
-  return (
-    <div className='flex flex-col items-center gap-4 pt-8'>
-      <h1 className='text-4xl'>profile</h1>
-      <button
-        onClick={() => navigate('/dashboard')}
-        className='content-center rounded-xl bg-black p-3 text-white'
-      >
-        go back to docs
-      </button>
-    </div>
-  );
-};
-
-const MyPlan = () => {
-  const navigate = useNavigate();
-  return (
-    <div className='flex flex-col items-center gap-4 pt-8'>
-      <h1 className='text-4xl'>Myplan</h1>
-      <button
-        onClick={() => navigate('/dashboard')}
-        className='content-center rounded-xl bg-black p-3 text-white'
-      >
-        go back to docs
-      </button>
-    </div>
-  );
-};
+const { Settings } = lazyImport(() => import('@/features/profile'), 'Settings');
+const { Profile } = lazyImport(() => import('@/features/profile'), 'Profile');
+const { MyPlan } = lazyImport(() => import('@/features/profile'), 'MyPlan');
 
 export const protectedRoutes = [
   {
@@ -65,6 +25,14 @@ export const protectedRoutes = [
   {
     path: '/plans',
     element: <Plans />,
+  },
+  {
+    path: '/plans/success',
+    element: <Success />,
+  },
+  {
+    path: '/plans/cancel',
+    element: <Cancel />,
   },
   {
     path: '/settings',
