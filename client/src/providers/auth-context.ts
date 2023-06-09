@@ -25,11 +25,12 @@ export type User = {
 } | null;
 
 const user: User = null;
-
+const setUser = () => {};
 interface AuthContextType {
   user: User;
+  setUser: (user: User) => void;
 }
 
-const authContext = React.createContext<AuthContextType>({ user });
+const authContext = React.createContext<AuthContextType>({ user, setUser });
 
 export default authContext;
