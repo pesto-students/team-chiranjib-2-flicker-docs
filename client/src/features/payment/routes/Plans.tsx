@@ -1,8 +1,31 @@
+import { useEffect } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
+import { useSearchParams } from 'react-router-dom';
+
 import { Header } from '@/components';
+import { useAuth } from '@/hooks';
+import { axiosClient } from '@/lib';
 
 import { PlanCards } from '../components/PlanCards';
 
 export const Plans = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const success = searchParams.get('success');
+
+  const { user, setUser } = useAuth();
+
+  useEffect(() => {
+    if (success) {
+      axiosClient.get(`/payment/verify/${user?.email}`).then((res) => {
+        if (res.data?.user?.subscription) {
+          setUser(res.data.user);
+          toast.success('Payment successful 🚀');
+          setSearchParams();
+        }
+      });
+    }
+  }, []);
+
   return (
     <>
       <Header />
@@ -21,6 +44,7 @@ export const Plans = () => {
           </div>
         </div>
       </section>
+      <Toaster />
     </>
   );
 };

@@ -32,6 +32,32 @@ const UserSchema: Schema = new Schema({
       ref: 'Document',
     },
   ],
+  subscription: {
+    subscriptionId: {
+      type: String,
+    },
+    customerId: {
+      type: String,
+    },
+    priceId: {
+      type: String,
+    },
+    amount: {
+      type: Number,
+    },
+    currency: {
+      type: String,
+    },
+    created: {
+      type: Number,
+    },
+    current_period_start: {
+      type: Number,
+    },
+    current_period_end: {
+      type: Number,
+    },
+  },
 });
 
 export const UserModel = model<User & Document>('User', UserSchema);
