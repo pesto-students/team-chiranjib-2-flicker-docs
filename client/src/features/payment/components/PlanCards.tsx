@@ -1,5 +1,6 @@
 import { Button } from '@/components';
 import { PRICE_ID_ENTERPRISE, PRICE_ID_PROFESSIONAL, URL } from '@/config';
+import { useAuth } from '@/hooks';
 
 import getStripe from '../config/index';
 import { EnterprisePlan, ProfessionalPlan, StarterPlan } from '../utils/constants';
@@ -35,6 +36,8 @@ const SinglePlan = ({ plan, handleCheckout }: PlanProps) => (
 );
 
 export const PlanCards = () => {
+  const { user } = useAuth();
+
   async function handleCheckout(plan: string) {
     let PRICING_PLAN: string;
 
@@ -63,7 +66,7 @@ export const PlanCards = () => {
       mode: 'subscription',
       successUrl: `${URL}/plans/success`,
       cancelUrl: `${URL}/plans/cancel`,
-      customerEmail: 'joe115@email.com',
+      customerEmail: user?.email,
     });
     console.warn(error.message);
   }
