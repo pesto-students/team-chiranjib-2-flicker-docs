@@ -1,8 +1,23 @@
+import { useEffect } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
+import { useSearchParams } from 'react-router-dom';
+
 import { Header } from '@/components';
 
 import { PlanCards } from '../components/PlanCards';
 
 export const Plans = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const success = searchParams.get('s');
+
+    if (success) {
+      toast.success('Payment successful 🚀');
+      setSearchParams();
+    }
+  }, []);
+
   return (
     <>
       <Header />
@@ -21,6 +36,7 @@ export const Plans = () => {
           </div>
         </div>
       </section>
+      <Toaster />
     </>
   );
 };
