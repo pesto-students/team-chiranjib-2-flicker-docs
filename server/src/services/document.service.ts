@@ -1,3 +1,10 @@
+import {
+  ENTERPRISE_PLAN_LIMIT,
+  PROFESSIONAL_PLAN_LIMIT,
+  STARTER_PLAN_LIMIT,
+  STRIPE_PRICE_ID_ENTERPRISE,
+  STRIPE_PRICE_ID_PROFESSIONAL,
+} from '@/config';
 import { HttpException } from '@/exceptions/httpException';
 import { User } from '@/interfaces/users.interface';
 import { DocumentModel } from '@/models/document.model';
@@ -17,6 +24,21 @@ export class DocumentService {
     const document = await createDocData.save();
 
     const userData = await UserModel.findOne({ email: user.email });
+    if (!userData) throw new HttpException(404, 'User not found');
+
+    let LIMIT: number = parseInt(STARTER_PLAN_LIMIT);
+
+    if (userData?.subscription) {
+      if (userData?.subscription.priceId === STRIPE_PRICE_ID_PROFESSIONAL) {
+        LIMIT = parseInt(PROFESSIONAL_PLAN_LIMIT);
+      }
+
+      if (userData?.subscription.priceId === STRIPE_PRICE_ID_ENTERPRISE) {
+        LIMIT = parseInt(ENTERPRISE_PLAN_LIMIT);
+      }
+    }
+
+    if (userData.documents.length >= LIMIT) throw new HttpException(400, 'You have reached the limit of documents');
 
     userData.documents.push(document._id);
     userData.save();

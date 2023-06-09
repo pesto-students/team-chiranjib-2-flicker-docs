@@ -1,5 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
+import { useState } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import uniqid from 'uniqid';
 
@@ -12,6 +14,7 @@ import DocumentTabs from '../components/DocumentTabs';
 export const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [docName, setDocName] = useState<string>('');
 
   const mutation = useMutation({
     mutationFn: (docName: string) => {
@@ -26,9 +29,18 @@ export const Dashboard = () => {
     const docName = uniqid();
 
     mutation.mutate(docName);
-
-    navigate(`/editor/${docName}`);
+    setDocName(docName);
   };
+
+  if (mutation.isSuccess) {
+    navigate(`/editor/${docName}`);
+  }
+
+  if (mutation.error) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    toast.error(mutation.error?.response?.data.message);
+  }
 
   return (
     <>
@@ -42,6 +54,7 @@ export const Dashboard = () => {
           <DocumentTabs />
         </div>
       </main>
+      <Toaster />
     </>
   );
 };
