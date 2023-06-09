@@ -73,7 +73,7 @@ export const PlanCards = () => {
         },
       ],
       mode: 'subscription',
-      successUrl: `${URL}/plans/success`,
+      successUrl: `${URL}/plans?success=true`,
       cancelUrl: `${URL}/plans/cancel`,
       customerEmail: user?.email,
     });
