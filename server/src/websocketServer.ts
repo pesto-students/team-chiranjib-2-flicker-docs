@@ -4,6 +4,7 @@ import { DocumentModel } from './models/document.model';
 
 import Y from 'yjs';
 import { logger } from './utils/logger';
+import { WS_PORT } from './config';
 
 const ToBase64 = function (u8: Uint8Array): string {
   return btoa(String.fromCharCode.apply(null, u8));
@@ -53,7 +54,7 @@ const loadDocumentFromDB = async (data: any) => {
 };
 
 const server = new Hocuspocus({
-  port: 1234,
+  port: parseInt(WS_PORT),
   extensions: [new Logger()],
   async onStoreDocument(data) {
     storeDocumentInDB(data);
