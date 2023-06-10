@@ -1,7 +1,11 @@
+/* eslint-disable */
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import { useQuery } from '@tanstack/react-query';
 import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
+import { Color } from '@tiptap/extension-color';
+import ListItem from '@tiptap/extension-list-item';
+import TextStyle from '@tiptap/extension-text-style';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import randomColor from 'randomcolor';
@@ -108,7 +112,7 @@ export const Editor = () => {
 
   return (
     <>
-      <EditorHeader openModal={openModal} document={document} />
+      <EditorHeader openModal={openModal} document={document} editor={editor} />
       <div className='flex justify-center gap-4 bg-slate-100 p-4'>
         <EditorContent
           editor={editor}

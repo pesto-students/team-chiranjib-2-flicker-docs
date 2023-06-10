@@ -13,9 +13,10 @@ import { CustomToolbar } from './CustomToolbar';
 type ModalProps = {
   openModal: () => void;
   document: Document;
+  editor: any;
 };
 
-export const EditorHeader = ({ openModal, document }: ModalProps) => {
+export const EditorHeader = ({ openModal, document, editor }: ModalProps) => {
   const [docDisplayName, setDocDisplayName] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -77,7 +78,7 @@ export const EditorHeader = ({ openModal, document }: ModalProps) => {
           <AvatarWithDropdown />
         </div>
       </div>
-      <CustomToolbar />
+      <CustomToolbar editor={editor} />
       <Toaster />
     </div>
   );
