@@ -4,34 +4,35 @@ export const CustomToolbar = ({ editor }: { editor: any }) => {
   }
 
   return (
-    <div className='grid w-[500px] grid-cols-[1fr_1fr_1fr_1fr_1fr] grid-rows-1 '>
+    // <div className="w-[1200px] h-full overflow-y-scroll overflow-x-hidden">
+    <div className='[&>*]:bg-gray-0 grid w-[500px] auto-cols-max grid-flow-col grid-rows-1 gap-3 [&>*]:cursor-pointer [&>*]:rounded-[7px] [&>*]:border-[1px] [&>*]:border-gray-400 [&>*]:px-[6px] [&>*]:py-[2px] [&>*]:text-[12px] [&>*]:font-[600] [&>*]:text-gray-500'>
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
         className={editor.isActive('bold') ? 'is-active' : ''}
       >
-        bold
+        Bold
       </button>
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
         disabled={!editor.can().chain().focus().toggleItalic().run()}
         className={editor.isActive('italic') ? 'is-active' : ''}
       >
-        italic
+        Italic
       </button>
       <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         disabled={!editor.can().chain().focus().toggleStrike().run()}
         className={editor.isActive('strike') ? 'is-active' : ''}
       >
-        strike
+        Strike
       </button>
       <button
         onClick={() => editor.chain().focus().toggleCode().run()}
         disabled={!editor.can().chain().focus().toggleCode().run()}
         className={editor.isActive('code') ? 'is-active' : ''}
       >
-        code
+        Code
       </button>
       <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>clear marks</button>
       <button onClick={() => editor.chain().focus().clearNodes().run()}>clear nodes</button>
@@ -95,7 +96,7 @@ export const CustomToolbar = ({ editor }: { editor: any }) => {
       >
         code block
       </button>
-      <button
+      {/* <button
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={editor.isActive('blockquote') ? 'is-active' : ''}
       >
@@ -104,8 +105,8 @@ export const CustomToolbar = ({ editor }: { editor: any }) => {
       <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
         horizontal rule
       </button>
-      <button onClick={() => editor.chain().focus().setHardBreak().run()}>hard break</button>
-      <button
+      <button onClick={() => editor.chain().focus().setHardBreak().run()}>hard break</button> */}
+      {/* <button
         onClick={() => editor.chain().focus().undo().run()}
         disabled={!editor.can().chain().focus().undo().run()}
       >
@@ -122,63 +123,8 @@ export const CustomToolbar = ({ editor }: { editor: any }) => {
         className={editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}
       >
         purple
-      </button>
+      </button> */}
     </div>
+    // </div>
   );
 };
-
-// export default () => {
-//   const editor = useEditor({
-//     extensions: [
-//       Color.configure({ types: [TextStyle.name, ListItem.name] }),
-//       TextStyle.configure({ types: [ListItem.name] }),
-//       StarterKit.configure({
-//         bulletList: {
-//           keepMarks: true,
-//           keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
-//         },
-//         orderedList: {
-//           keepMarks: true,
-//           keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
-//         },
-//       }),
-//     ],
-//     content: `
-//       <h2>
-//         Hi there,
-//       </h2>
-//       <p>
-//         this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
-//       </p>
-//       <ul>
-//         <li>
-//           That’s a bullet list with one …
-//         </li>
-//         <li>
-//           … or two list items.
-//         </li>
-//       </ul>
-//       <p>
-//         Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
-//       </p>
-//       <pre><code class="language-css">body {
-//   display: none;
-// }</code></pre>
-//       <p>
-//         I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
-//       </p>
-//       <blockquote>
-//         Wow, that’s amazing. Good work, boy! 👏
-//         <br />
-//         — Mom
-//       </blockquote>
-//     `,
-//   });
-
-//   return (
-//     <div>
-//       <MenuBar editor={editor} />
-//       <EditorContent editor={editor} />
-//     </div>
-//   );
-// };
