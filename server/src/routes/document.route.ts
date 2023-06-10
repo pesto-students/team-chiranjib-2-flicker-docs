@@ -18,5 +18,15 @@ export class DocumentRoute implements Routes {
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.documentController.getDocs);
     this.router.post(`${this.path}`, this.documentController.createDoc);
+
+    this.router.get(`${this.path}/:docName`, this.documentController.getSingleDoc);
+
+    this.router.put(`${this.path}/:id/display-name`, this.documentController.updateDocDisplayName);
+
+    this.router.post(`${this.path}/user`, this.documentController.addSharedDocumentToUser);
+
+    this.router.get(`${this.path}/:docname/shared-users`, this.documentController.getSharedUsers);
+
+    this.router.post(`${this.path}/email/share`, this.documentController.shareDocumentByEmail);
   }
 }

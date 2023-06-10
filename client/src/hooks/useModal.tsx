@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import { useState, ReactNode, useCallback } from 'react';
 
 type ModalProps = {
   children: ReactNode;
@@ -6,45 +6,17 @@ type ModalProps = {
   onClose: () => void;
 };
 
-const Modal = ({ children, isOpen, onClose }: ModalProps) => {
-  const [isBrowser, setIsBrowser] = useState(false);
-
-  useEffect(() => {
-    setIsBrowser(true);
-  }, []);
-
-  if (isBrowser && isOpen) {
+export const Modal = ({ children, isOpen, onClose }: ModalProps) => {
+  if (isOpen) {
     return (
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-        }}
-      >
+      <div className='fixed left-0 top-0 h-full w-full'>
         <div
-          style={{
-            width: '100%',
-            height: '100%',
-            background: 'rgba(0,0,0,0.3)',
-            backdropFilter: 'blur(2px)',
-            zIndex: 4,
-          }}
+          className='z-4 h-full w-full bg-black bg-opacity-30 backdrop-blur-sm backdrop-filter'
           onClick={onClose}
           onKeyDown={onClose}
           role='presentation'
         />
-        <div
-          style={{
-            zIndex: 5,
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
+        <div className='z-5 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform'>
           {children}
         </div>
       </div>
@@ -57,14 +29,8 @@ const Modal = ({ children, isOpen, onClose }: ModalProps) => {
 export const useModal = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const openModal = useCallback(() => setIsOpen(true), []);
+  const closeModal = useCallback(() => setIsOpen(false), []);
 
-  const ModalComponent = ({ children }: { children: ReactNode }) => (
-    <Modal isOpen={isOpen} onClose={closeModal}>
-      {children}
-    </Modal>
-  );
-
-  return { Modal: ModalComponent, openModal, closeModal };
+  return { isOpen, openModal, closeModal };
 };

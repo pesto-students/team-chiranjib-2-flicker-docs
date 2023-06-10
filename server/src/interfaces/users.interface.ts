@@ -7,4 +7,15 @@ export interface User {
   picture: string;
   token: string;
   documents?: Array<string>;
+  sharedDocuments?: Array<string>;
+  subscription?: {
+    subscriptionId: string;
+    customerId: string;
+    priceId: string;
+    amount: number;
+    currency: string;
+    created: number;
+    current_period_start: number;
+    current_period_end: number;
+  };
 }

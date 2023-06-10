@@ -1,7 +1,8 @@
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 
 import { useAuth } from '@/hooks';
+import { axiosClient } from '@/lib';
 
 import SingleDocument from './SingleDocument';
 
@@ -24,12 +25,15 @@ type Document = {
   createdAt: string;
   updatedAt?: string;
 };
+
+type Response = {
+  documents: Document[];
+};
+
 export function DocumentTabs() {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
-
-  const [documents, setDocuments] = useState<Document[]>([]);
 
   const { user } = useAuth();
   const tabsRef = useRef<any>([]);
@@ -47,19 +51,28 @@ export function DocumentTabs() {
     return () => window.removeEventListener('resize', setTabPosition);
   }, [activeTabIndex]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(`${process.env.REACT_APP_API}/document`, {
+  const {
+    isLoading,
+    error,
+    data: documents,
+    refetch,
+  } = useQuery({
+    queryKey: ['documentsData'],
+    queryFn: () =>
+      axiosClient.get<Response>(`/document`, {
         params: {
           user,
+          docType: activeTabIndex,
         },
-      });
+      }),
+    select: (res) => res.data.documents,
+  });
 
-      setDocuments(response.data.documents);
-    };
+  useEffect(() => {
+    refetch();
+  }, [activeTabIndex]);
 
-    fetchData();
-  }, []);
+  if (error) return <div> could not fetch documents</div>;
 
   return (
     <div className='mt-6'>
@@ -86,7 +99,8 @@ export function DocumentTabs() {
         />
       </div>
       <div className='grid grid-cols-5 gap-6 py-8'>
-        {documents.map((docData) => (
+        {isLoading && <p>Loading...</p>}
+        {documents?.map((docData) => (
           <SingleDocument {...docData} key={docData._id} />
         ))}
       </div>

@@ -53,7 +53,11 @@ export class App {
       set('debug', true);
     }
 
-    await connect(dbConnection.url);
+    try {
+      await connect(dbConnection.url);
+    } catch (error) {
+      logger.error(error);
+    }
   }
 
   private initializeMiddlewares() {
@@ -69,7 +73,7 @@ export class App {
 
   private initializeRoutes(routes: Routes[]) {
     routes.forEach(route => {
-      this.app.use('/', route.router);
+      this.app.use('/api', route.router);
     });
   }
 

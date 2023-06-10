@@ -1,17 +1,33 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { FlickerDocsLogo } from '@/constants';
 
 import { AvatarWithDropdown } from './AvatarWithDropdown';
 import { Button } from './ui/button';
 
-export const Header = () => (
-  <header className='flex h-16 items-center justify-between px-12 shadow-md'>
-    <div className='flex items-center gap-3'>
-      <FlickerDocsLogo />
-      <h1 className='text-sm font-extrabold md:text-3xl'>Flicker Docs</h1>
-    </div>
-    <div className='flex gap-8'>
-      <Button size={'sm'}>Upgrade plan</Button>
-      <AvatarWithDropdown />
-    </div>
-  </header>
-);
+export const Header = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  return (
+    <header className='flex h-16 items-center justify-between px-12 shadow-md'>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+      <div
+        className='flex cursor-pointer items-center gap-3'
+        onClick={() => navigate('/dashboard')}
+      >
+        <FlickerDocsLogo />
+        <h1 className='text-sm font-extrabold md:text-3xl'>Flicker Docs</h1>
+      </div>
+      <div className='flex gap-8'>
+        {pathname !== '/plans' ? (
+          <Button size={'sm'} onClick={() => navigate('/plans')}>
+            Upgrade plan
+          </Button>
+        ) : null}
+        <AvatarWithDropdown />
+      </div>
+    </header>
+  );
+};

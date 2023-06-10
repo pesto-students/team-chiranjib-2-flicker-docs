@@ -3,6 +3,8 @@ import { Logger } from '@hocuspocus/extension-logger';
 import { DocumentModel } from './models/document.model';
 
 import Y from 'yjs';
+import { logger } from './utils/logger';
+import { WS_PORT } from './config';
 
 const ToBase64 = function (u8: Uint8Array): string {
   return btoa(String.fromCharCode.apply(null, u8));
@@ -52,7 +54,7 @@ console.log(document, "document")
 };
 
 const server = new Hocuspocus({
-  port: 1234,
+  port: parseInt(WS_PORT),
   extensions: [new Logger()],
   async onStoreDocument(data) {
     storeDocumentInDB(data);
@@ -63,20 +65,19 @@ const server = new Hocuspocus({
   },
 
   async connected() {
-    console.log('connections:', server.getConnectionsCount());
+    logger.info('connections:', server.getConnectionsCount());
   },
   async onConfigure() {
-    console.log(`Server was configured!`);
+    logger.info(`Server was configured!`);
   },
   async onConnect(data) {
-    console.log(`New websocket connection ${data.documentName}`);
+    logger.info(`New websocket connection ${data.documentName}`);
   },
   async onDestroy() {
-    console.log(`Server was shut down!`);
+    logger.info(`Server was shut down!`);
   },
   async onDisconnect(data) {
-    // console.log(`"${data.context.user.name}" has disconnected.`);
-    console.log(`disconnected.`);
+    logger.info(`"user from ${data.documentName}" has disconnected.`);
   },
 });
 
