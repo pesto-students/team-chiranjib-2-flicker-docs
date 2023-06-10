@@ -112,7 +112,7 @@ export const Editor = () => {
 
   return (
     <>
-      <EditorHeader openModal={openModal} document={document} />
+      <EditorHeader openModal={openModal} document={document} editor={editor} />
       <div className='flex justify-center gap-4 bg-slate-100 p-4'>
         <EditorContent
           editor={editor}

@@ -1,6 +1,3 @@
-// import './styles.scss';
-import React from 'react';
-
 export const CustomToolbar = ({ editor }: { editor: any }) => {
   if (!editor) {
     return null;
