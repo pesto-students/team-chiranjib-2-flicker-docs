@@ -38,7 +38,7 @@ export class DocumentService {
       }
     }
 
-    if (userData.documents.length >= LIMIT) throw new HttpException(400, 'You have reached the limit of documents');
+    if (userData.documents.length >= LIMIT) throw new HttpException(400, 'You have reached the limit please upgrade your plan');
 
     userData.documents.push(document._id);
     userData.save();
