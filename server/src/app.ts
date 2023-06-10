@@ -41,7 +41,7 @@ export class App {
       logger.info(`🚀 App listening on the port ${this.port}`);
       logger.info(`=================================`);
     });
-    websocketServer.listen();
+    // websocketServer.listen();
   }
 
   public getServer() {
