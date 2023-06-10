@@ -56,7 +56,7 @@ export const EditorHeader = ({ openModal, document, editor }: ModalProps) => {
             >
               <input
                 ref={inputRef}
-                className='text-lg font-semibold leading-none text-slate-600 focus:border focus:border-slate-400'
+                className='border-box rounded-md px-[4px] py-[2px] text-lg font-semibold leading-none text-slate-600 focus:border focus:border-slate-400 focus:outline-none'
                 value={docDisplayName}
                 onChange={(e) => setDocDisplayName(e.target.value)}
                 onBlur={() => mutation.mutate(docDisplayName)}
