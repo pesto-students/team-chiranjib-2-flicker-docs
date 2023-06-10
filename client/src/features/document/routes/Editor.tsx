@@ -75,7 +75,7 @@ export const Editor = () => {
     editorProps: {
       attributes: {
         class:
-          'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg p-2 xl:prose-2xl focus:outline-none bg-white rounded-md h-full',
+          'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none bg-white rounded-md h-full p-[20px]',
       },
     },
   });
