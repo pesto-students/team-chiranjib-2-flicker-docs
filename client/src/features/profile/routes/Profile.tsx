@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage, Input, Label } from '@/components';
+import { Avatar, AvatarFallback, AvatarImage, Button, Input, Label } from '@/components';
 import { useAuth } from '@/hooks';
 
 type InputWithLabelProps = {
@@ -32,6 +32,7 @@ export const Profile = () => {
 
       <InputWithLabel label='Email' type='email' value={user?.email} disabled />
       <InputWithLabel label='Username' type='username' value={user?.name} />
+      <Button>Save</Button>
     </div>
   );
 };
