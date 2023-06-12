@@ -3,6 +3,8 @@ export * from './ui/button';
 export * from './ui/avatar';
 export * from './ui/skeleton';
 export * from './ui/tabs';
+export * from './ui/label';
+export * from './ui/progress';
 
 export * from './AvatarWithDropdown';
 export * from './Header';
