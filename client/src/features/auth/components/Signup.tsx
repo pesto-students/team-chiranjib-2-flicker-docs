@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { GOOGLE_CLIENT_ID } from '@/config';
+import { useAuth } from '@/hooks';
 import { axiosClient, login } from '@/lib';
 
 declare global {
@@ -10,6 +12,10 @@ declare global {
 }
 
 export const SignUp = () => {
+  const [searchParams] = useSearchParams();
+  const { setUser } = useAuth();
+  const navigate = useNavigate();
+
   const handleGoogle = async (response: any) => {
     const data = JSON.stringify({ credential: response.credential });
 
@@ -17,7 +23,12 @@ export const SignUp = () => {
       const response = await axiosClient.post('/auth/signin', data);
 
       if (response?.data?.user) {
+        const redirect = searchParams.get('redirect');
+        setUser(response.data.user._doc);
         login(response?.data?.user?.token);
+        if (redirect) {
+          navigate(redirect);
+        }
       }
     } catch (error) {
       console.log(error);

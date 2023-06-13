@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Suspense, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button, Spinner } from '@/components/';
 import { loadUser } from '@/lib';
@@ -18,9 +18,11 @@ const ErrorFallback = () => {
       role='alert'
     >
       <h2 className='text-lg font-semibold'>Ooops, something went wrong :( </h2>
-      <Button className='mt-4' onClick={() => window.location.assign(window.location.origin)}>
-        Refresh
-      </Button>
+
+      <div className='mt-4 flex gap-4'>
+        <Button onClick={() => window.location.reload()}>Refresh</Button>
+        <Button onClick={() => window.location.assign(window.location.origin)}>Go to home</Button>
+      </div>
     </div>
   );
 };
@@ -31,11 +33,19 @@ type AppProviderProps = {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   const [user, setUser] = useState<User>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     (async () => {
       const userData = await loadUser();
-      setUser(userData);
+      if (!userData) {
+        if (location.pathname !== '/') {
+          navigate(`/?redirect=${location.pathname}${location.search}`);
+        }
+      } else {
+        setUser(userData);
+      }
     })();
   }, []);
 
@@ -53,7 +63,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
             {process.env.NODE_ENV !== 'test' && <ReactQueryDevtools initialIsOpen={false} />}
 
             <AuthContext.Provider value={{ user, setUser }}>
-              <Router>{children}</Router>
+              {/* <Router> */}
+              {children}
+              {/* </Router> */}
             </AuthContext.Provider>
           </QueryClientProvider>
         </HelmetProvider>

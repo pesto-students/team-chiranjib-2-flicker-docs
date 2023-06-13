@@ -45,18 +45,25 @@ export class AuthService {
 
       const findUser: User = await UserModel.findOne({ email: userData.email });
 
-      if (!findUser) {
-        const user = new UserModel({
-          ...userData,
-        });
-
-        await user.save();
+      if (findUser) {
+        return {
+          ...findUser,
+          token: sign({ email: profile?.email }, 'myScret', {
+            expiresIn: '3d',
+          }),
+        };
       }
 
-      return {
+      const user = new UserModel({
         ...userData,
+      });
+
+      const newUser = await user.save();
+
+      return {
+        ...newUser,
         token: sign({ email: profile?.email }, 'myScret', {
-          expiresIn: '1d',
+          expiresIn: '3d',
         }),
       };
     }
