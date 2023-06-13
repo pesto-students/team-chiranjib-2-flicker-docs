@@ -62,11 +62,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           <QueryClientProvider client={queryClient}>
             {process.env.NODE_ENV !== 'test' && <ReactQueryDevtools initialIsOpen={false} />}
 
-            <AuthContext.Provider value={{ user, setUser }}>
-              {/* <Router> */}
-              {children}
-              {/* </Router> */}
-            </AuthContext.Provider>
+            <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>
           </QueryClientProvider>
         </HelmetProvider>
       </ErrorBoundary>
