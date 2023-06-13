@@ -98,6 +98,21 @@ code {
   }
 }
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: #ffffff00;
+    border-radius: 100vh;
+  }
+
+  .scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: rgb(226 232 240);
+  }
+}
+
 .collaboration-cursor__caret {
   border-left: 1px solid #0d0d0d;
   border-right: 1px solid #0d0d0d;

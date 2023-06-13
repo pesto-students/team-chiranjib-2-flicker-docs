@@ -48,7 +48,7 @@ const Sidebar = () => {
       <div className='flex w-64 flex-col'>
         <div className='flex h-0 flex-1 flex-col'>
           <div className='flex h-16 flex-shrink-0 items-center bg-slate-100 px-4'></div>
-          <div className='flex flex-1 flex-col overflow-y-auto'>
+          <div className='scrollbar flex flex-1 flex-col overflow-y-auto'>
             <nav className='flex-1 space-y-1 bg-slate-100 px-2 py-4'>
               <SideNavigation />
             </nav>
@@ -68,7 +68,9 @@ const SettingsCard = ({ children }: SettingsLayoutProps) => {
     <div className='flex h-[500px] w-[900px] overflow-hidden rounded-lg bg-slate-50'>
       <Sidebar />
       <div className='flex w-0 flex-1 flex-col overflow-hidden'>
-        <main className='relative flex-1 overflow-y-auto focus:outline-none'>{children}</main>
+        <main className='scrollbar relative flex-1 overflow-y-auto focus:outline-none'>
+          {children}
+        </main>
       </div>
     </div>
   );

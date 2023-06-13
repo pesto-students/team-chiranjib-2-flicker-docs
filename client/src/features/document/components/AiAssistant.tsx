@@ -50,7 +50,7 @@ const ChatTextSelection = ({
 }: ChatTextSelectionProps) => {
   return (
     <div className='flex h-[80%] flex-col rounded border-2 bg-slate-100 p-2'>
-      <div className='flex-1 overflow-y-auto rounded bg-white'>
+      <div className='scrollbar flex-1 overflow-y-auto rounded bg-white'>
         <div className='border-b p-2 text-sm'>Selected Text</div>
         <div className='p-2 text-sm'>{selectedText}</div>
       </div>
@@ -85,7 +85,7 @@ const Conversation = ({
 }: ConversationProps) => {
   return (
     <>
-      <div className='mb-2 flex-1 overflow-y-auto'>
+      <div className='scrollbar mb-2 flex-1 overflow-y-auto'>
         {question && (
           <div className='float-left  max-w-[80%] rounded-r-lg rounded-bl-lg bg-slate-200 p-2 text-sm'>
             {question}

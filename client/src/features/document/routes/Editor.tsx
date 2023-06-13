@@ -74,7 +74,8 @@ export const Editor = () => {
     extensions,
     editorProps: {
       attributes: {
-        class: 'prose-lg focus:outline-none overflow-y-scroll bg-white rounded-md h-full p-[20px]',
+        class:
+          'prose-lg scrollbar focus:outline-none overflow-y-scroll bg-white rounded-md h-full p-[20px]',
       },
     },
   });
@@ -121,7 +122,7 @@ export const Editor = () => {
           }}
         />
         <div className='flex w-1/5 flex-col gap-6'>
-          <div className='flex h-[40%] w-[100%] flex-col overflow-y-auto rounded-md bg-white p-2'>
+          <div className='scrollbar flex h-[40%] w-[100%] flex-col overflow-y-auto rounded-md bg-white p-2'>
             <Chat activeUsers={activeUsers} />
           </div>
           <div className='flex h-[60%] w-[100%] flex-col justify-between rounded-md bg-white p-3'>
