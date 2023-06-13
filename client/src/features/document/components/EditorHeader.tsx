@@ -41,7 +41,7 @@ export const EditorHeader = ({ openModal, document, editor }: ModalProps) => {
   }, [document?.displayName]);
 
   return (
-    <div className='flex h-[15vh] flex-col justify-between py-3 pe-8 ps-8'>
+    <div className='flex h-[115px] flex-col justify-between py-3 pe-8 ps-8'>
       <div className='flex justify-between'>
         <div className='flex gap-3'>
           <div>

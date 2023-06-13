@@ -74,8 +74,7 @@ export const Editor = () => {
     extensions,
     editorProps: {
       attributes: {
-        class:
-          'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none bg-white rounded-md h-full p-[20px]',
+        class: 'prose-lg focus:outline-none overflow-y-scroll bg-white rounded-md h-full p-[20px]',
       },
     },
   });
@@ -111,13 +110,13 @@ export const Editor = () => {
   };
 
   return (
-    <>
+    <div className='flex h-screen flex-col'>
       <EditorHeader openModal={openModal} document={document} editor={editor} />
-      <div className='flex justify-center gap-4 bg-slate-100 p-4'>
+      <div className='flex h-[calc(100%-115px)] justify-center gap-4 bg-slate-100 p-4'>
         <EditorContent
           editor={editor}
           style={{
-            height: 'calc(85vh - 32px)',
+            height: '100%',
             width: '50%',
           }}
         />
@@ -135,6 +134,6 @@ export const Editor = () => {
         </div>
       </div>
       {isOpen ? <ShareModal closeModal={closeModal} isOpen={isOpen} /> : null}
-    </>
+    </div>
   );
 };
