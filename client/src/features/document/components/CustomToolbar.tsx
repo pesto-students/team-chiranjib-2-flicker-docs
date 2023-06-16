@@ -15,6 +15,9 @@ import * as Select from '@radix-ui/react-select';
 import * as Toolbar from '@radix-ui/react-toolbar';
 import './customtoolbar.css';
 import classnames from 'classnames';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 import { ListOrderedIcon } from 'lucide-react';
 import React from 'react';
 
@@ -121,10 +124,11 @@ const SelectDemo = ({ editor }: { editor: any }) => {
   );
 };
 
-export const CustomToolbar = ({ editor }: { editor: any }) => {
+export const CustomToolbar = ({ editor, document }: { editor: any; document: any }) => {
   if (!editor) {
     return null;
   }
+  console.log(document);
 
   return (
     <Toolbar.Root className='ToolbarRoot' aria-label='Formatting options'>
@@ -213,9 +217,10 @@ export const CustomToolbar = ({ editor }: { editor: any }) => {
           <CodeIcon />
         </Toolbar.ToggleItem>
       </Toolbar.ToggleGroup>
-      {/* <Toolbar.Link className='ToolbarLink' href='#' target='_blank' style={{ marginRight: 10 }}>
-        Edited 2 hours ago
-      </Toolbar.Link> */}
+      <Toolbar.Separator className='ToolbarSeparator' />
+      <Toolbar.Link className='ToolbarLink' href='#' target='_blank' style={{ marginRight: 10 }}>
+        Edited {dayjs(document?.updatedAt).fromNow()}
+      </Toolbar.Link>
     </Toolbar.Root>
   );
 };

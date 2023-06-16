@@ -79,7 +79,7 @@ export const EditorHeader = ({ openModal, document, editor }: ModalProps) => {
         </div>
       </div>
       <div className='max-h-24'>
-        <CustomToolbar editor={editor} />
+        <CustomToolbar editor={editor} document={document} />
       </div>
       <Toaster />
     </div>
