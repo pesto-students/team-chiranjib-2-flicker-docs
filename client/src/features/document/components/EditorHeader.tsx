@@ -78,7 +78,9 @@ export const EditorHeader = ({ openModal, document, editor }: ModalProps) => {
           <AvatarWithDropdown />
         </div>
       </div>
-      <CustomToolbar editor={editor} />
+      <div className='max-h-24'>
+        <CustomToolbar editor={editor} />
+      </div>
       <Toaster />
     </div>
   );
