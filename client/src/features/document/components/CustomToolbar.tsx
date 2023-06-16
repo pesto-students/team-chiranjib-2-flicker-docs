@@ -5,10 +5,121 @@ import {
   TextAlignRightIcon,
   FontBoldIcon,
   FontItalicIcon,
+  ListBulletIcon,
+  CodeIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
 } from '@radix-ui/react-icons';
+import * as Select from '@radix-ui/react-select';
 import * as Toolbar from '@radix-ui/react-toolbar';
-
 import './customtoolbar.css';
+import classnames from 'classnames';
+import { ListOrderedIcon } from 'lucide-react';
+import React from 'react';
+
+import './selectstyles.css';
+
+const SelectItem = React.forwardRef(function selectItem(
+  { children, className, ...props }: any,
+  forwardedRef
+) {
+  return (
+    <Select.Item className={classnames('SelectItem', className)} {...props} ref={forwardedRef}>
+      <Select.ItemText>{children}</Select.ItemText>
+      <Select.ItemIndicator className='SelectItemIndicator'>
+        <CheckIcon />
+      </Select.ItemIndicator>
+    </Select.Item>
+  );
+});
+
+const SelectDemo = ({ editor }: { editor: any }) => {
+  const onValueChange = (value: any) => {
+    if (value === 'paragraph') {
+      editor.chain().focus().setParagraph().run();
+    } else {
+      console.log('in on value change', value);
+      editor
+        .chain()
+        .focus()
+        .toggleHeading({ level: parseInt(value) })
+        .run();
+    }
+  };
+
+  return (
+    <Select.Root defaultValue={'paragraph'} onValueChange={onValueChange}>
+      <Select.Trigger className='SelectTrigger' aria-label='Food'>
+        <Select.Value />
+        <Select.Icon className='SelectIcon'>
+          <ChevronDownIcon />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content className='SelectContent'>
+          <Select.ScrollUpButton className='SelectScrollButton'>
+            <ChevronUpIcon />
+          </Select.ScrollUpButton>
+          <Select.Viewport className='SelectViewport'>
+            <Select.Group>
+              <SelectItem
+                value='paragraph'
+                onClick={() => editor.chain().focus().setParagraph().run()}
+              >
+                Paragraph
+              </SelectItem>
+            </Select.Group>
+
+            <Select.Separator className='SelectSeparator' />
+
+            <Select.Group>
+              <SelectItem
+                value='1'
+                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+              >
+                Headding 1
+              </SelectItem>
+              <SelectItem
+                value='2'
+                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+              >
+                Headding 2
+              </SelectItem>
+              <SelectItem
+                value='3'
+                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+              >
+                Headding 3
+              </SelectItem>
+              <SelectItem
+                value='4'
+                onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
+              >
+                Headding 4
+              </SelectItem>
+              <SelectItem
+                value='5'
+                onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
+              >
+                Headding 5
+              </SelectItem>
+              <SelectItem
+                value='6'
+                onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
+              >
+                Headding 6
+              </SelectItem>
+            </Select.Group>
+          </Select.Viewport>
+          <Select.ScrollDownButton className='SelectScrollButton'>
+            <ChevronDownIcon />
+          </Select.ScrollDownButton>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
+  );
+};
 
 export const CustomToolbar = ({ editor }: { editor: any }) => {
   if (!editor) {
@@ -22,20 +133,33 @@ export const CustomToolbar = ({ editor }: { editor: any }) => {
         className='ToolbarToggleGroup'
         aria-label='Text formatting'
       >
-        <Toolbar.ToggleItem className='ToolbarToggleItem' value='bold' aria-label='Bold'>
+        <Toolbar.ToggleItem
+          className='ToolbarToggleItem'
+          value='bold'
+          aria-label='Bold'
+          onClick={() => editor.chain().focus().toggleBold().run()}
+        >
           <FontBoldIcon />
         </Toolbar.ToggleItem>
-        <Toolbar.ToggleItem className='ToolbarToggleItem' value='italic' aria-label='Italic'>
+        <Toolbar.ToggleItem
+          className='ToolbarToggleItem'
+          value='italic'
+          aria-label='Italic'
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+        >
           <FontItalicIcon />
         </Toolbar.ToggleItem>
         <Toolbar.ToggleItem
           className='ToolbarToggleItem'
           value='strikethrough'
           aria-label='Strike through'
+          onClick={() => editor.chain().focus().toggleStrike().run()}
         >
           <StrikethroughIcon />
         </Toolbar.ToggleItem>
       </Toolbar.ToggleGroup>
+      <Toolbar.Separator className='ToolbarSeparator' />
+      <SelectDemo editor={editor} />
       <Toolbar.Separator className='ToolbarSeparator' />
       <Toolbar.ToggleGroup
         type='single'
@@ -58,133 +182,40 @@ export const CustomToolbar = ({ editor }: { editor: any }) => {
         </Toolbar.ToggleItem>
       </Toolbar.ToggleGroup>
       <Toolbar.Separator className='ToolbarSeparator' />
-      <Toolbar.Link className='ToolbarLink' href='#' target='_blank' style={{ marginRight: 10 }}>
+
+      <Toolbar.ToggleGroup
+        type='multiple'
+        className='ToolbarToggleGroup'
+        aria-label='Text formatting'
+      >
+        <Toolbar.ToggleItem
+          className='ToolbarToggleItem'
+          value='strikethrough'
+          aria-label='Strike through'
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        >
+          <ListOrderedIcon className='h-5 stroke-1' />
+        </Toolbar.ToggleItem>
+        <Toolbar.ToggleItem
+          className='ToolbarToggleItem'
+          value='bold'
+          aria-label='Bold'
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+        >
+          <ListBulletIcon />
+        </Toolbar.ToggleItem>
+        <Toolbar.ToggleItem
+          className='ToolbarToggleItem'
+          value='italic'
+          aria-label='Italic'
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        >
+          <CodeIcon />
+        </Toolbar.ToggleItem>
+      </Toolbar.ToggleGroup>
+      {/* <Toolbar.Link className='ToolbarLink' href='#' target='_blank' style={{ marginRight: 10 }}>
         Edited 2 hours ago
-      </Toolbar.Link>
+      </Toolbar.Link> */}
     </Toolbar.Root>
   );
-  // return (
-  //   // <div className="w-[1200px] h-full overflow-y-scroll overflow-x-hidden">
-  //   <div className='[&>*]:bg-gray-0 grid w-[500px] auto-cols-max grid-flow-col grid-rows-1 gap-3 [&>*]:cursor-pointer [&>*]:rounded-[7px] [&>*]:border-[1px] [&>*]:border-gray-400 [&>*]:px-[6px] [&>*]:py-[2px] [&>*]:text-[12px] [&>*]:font-[600] [&>*]:text-gray-500'>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleBold().run()}
-  //       disabled={!editor.can().chain().focus().toggleBold().run()}
-  //       className={editor.isActive('bold') ? 'is-active' : ''}
-  //     >
-  //       Bold
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleItalic().run()}
-  //       disabled={!editor.can().chain().focus().toggleItalic().run()}
-  //       className={editor.isActive('italic') ? 'is-active' : ''}
-  //     >
-  //       Italic
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleStrike().run()}
-  //       disabled={!editor.can().chain().focus().toggleStrike().run()}
-  //       className={editor.isActive('strike') ? 'is-active' : ''}
-  //     >
-  //       Strike
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleCode().run()}
-  //       disabled={!editor.can().chain().focus().toggleCode().run()}
-  //       className={editor.isActive('code') ? 'is-active' : ''}
-  //     >
-  //       Code
-  //     </button>
-  //     <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>clear marks</button>
-  //     <button onClick={() => editor.chain().focus().clearNodes().run()}>clear nodes</button>
-  //     <button
-  //       onClick={() => editor.chain().focus().setParagraph().run()}
-  //       className={editor.isActive('paragraph') ? 'is-active' : ''}
-  //     >
-  //       paragraph
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-  //       className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
-  //     >
-  //       h1
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-  //       className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
-  //     >
-  //       h2
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-  //       className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
-  //     >
-  //       h3
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
-  //       className={editor.isActive('heading', { level: 4 }) ? 'is-active' : ''}
-  //     >
-  //       h4
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
-  //       className={editor.isActive('heading', { level: 5 }) ? 'is-active' : ''}
-  //     >
-  //       h5
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
-  //       className={editor.isActive('heading', { level: 6 }) ? 'is-active' : ''}
-  //     >
-  //       h6
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleBulletList().run()}
-  //       className={editor.isActive('bulletList') ? 'is-active' : ''}
-  //     >
-  //       bullet list
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleOrderedList().run()}
-  //       className={editor.isActive('orderedList') ? 'is-active' : ''}
-  //     >
-  //       ordered list
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-  //       className={editor.isActive('codeBlock') ? 'is-active' : ''}
-  //     >
-  //       code block
-  //     </button>
-  //     {/* <button
-  //       onClick={() => editor.chain().focus().toggleBlockquote().run()}
-  //       className={editor.isActive('blockquote') ? 'is-active' : ''}
-  //     >
-  //       blockquote
-  //     </button>
-  //     <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
-  //       horizontal rule
-  //     </button>
-  //     <button onClick={() => editor.chain().focus().setHardBreak().run()}>hard break</button> */}
-  //     {/* <button
-  //       onClick={() => editor.chain().focus().undo().run()}
-  //       disabled={!editor.can().chain().focus().undo().run()}
-  //     >
-  //       undo
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().redo().run()}
-  //       disabled={!editor.can().chain().focus().redo().run()}
-  //     >
-  //       redo
-  //     </button>
-  //     <button
-  //       onClick={() => editor.chain().focus().setColor('#958DF1').run()}
-  //       className={editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}
-  //     >
-  //       purple
-  //     </button> */}
-  //   </div>
-  //   // </div>
-  // );
 };
