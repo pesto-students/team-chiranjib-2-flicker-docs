@@ -31,6 +31,12 @@ button {
   align-items: center;
   justify-content: center;
 }
+
+.ToolbarToggleGroup {
+  display: flex;
+  gap: 2px;
+}
+
 .ToolbarToggleItem:hover,
 .ToolbarLink:hover,
 .ToolbarButton:hover {

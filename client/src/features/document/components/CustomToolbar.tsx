@@ -17,7 +17,11 @@ export const CustomToolbar = ({ editor }: { editor: any }) => {
 
   return (
     <Toolbar.Root className='ToolbarRoot' aria-label='Formatting options'>
-      <Toolbar.ToggleGroup type='multiple' aria-label='Text formatting'>
+      <Toolbar.ToggleGroup
+        type='multiple'
+        className='ToolbarToggleGroup'
+        aria-label='Text formatting'
+      >
         <Toolbar.ToggleItem className='ToolbarToggleItem' value='bold' aria-label='Bold'>
           <FontBoldIcon />
         </Toolbar.ToggleItem>
@@ -33,7 +37,12 @@ export const CustomToolbar = ({ editor }: { editor: any }) => {
         </Toolbar.ToggleItem>
       </Toolbar.ToggleGroup>
       <Toolbar.Separator className='ToolbarSeparator' />
-      <Toolbar.ToggleGroup type='single' defaultValue='center' aria-label='Text alignment'>
+      <Toolbar.ToggleGroup
+        type='single'
+        defaultValue='center'
+        className='ToolbarToggleGroup'
+        aria-label='Text alignment'
+      >
         <Toolbar.ToggleItem className='ToolbarToggleItem' value='left' aria-label='Left aligned'>
           <TextAlignLeftIcon />
         </Toolbar.ToggleItem>
