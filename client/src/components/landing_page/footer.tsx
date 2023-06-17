@@ -3,7 +3,7 @@ import { FlickerDocLarge } from '@/constants';
 import Container from './container';
 
 export default function Footer() {
-  const navigation = ['Features', 'Pricing'];
+  const navigation = ['Pricing'];
   const legal = ['Terms', 'Privacy', 'Legal'];
   return (
     <div className='relative'>

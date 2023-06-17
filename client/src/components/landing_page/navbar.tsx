@@ -8,13 +8,7 @@ import { useAuth } from '@/hooks';
 import { AvatarWithDropdown } from '../AvatarWithDropdown';
 
 const Navbar = () => {
-  const navigation = [
-    {
-      name: 'Features',
-      url: '/',
-    },
-    { name: 'Pricing', url: '/plans' },
-  ];
+  const navigation = [{ name: 'Pricing', url: '/plans' }];
 
   const { user } = useAuth();
   return (
