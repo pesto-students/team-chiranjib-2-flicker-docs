@@ -1,4 +1,5 @@
 import { Disclosure } from '@headlessui/react';
+import { Link } from 'react-router-dom';
 
 import { FlickerDocLarge } from '@/constants';
 import { SignUp } from '@/features/auth';
@@ -7,7 +8,14 @@ import { useAuth } from '@/hooks';
 import { AvatarWithDropdown } from '../AvatarWithDropdown';
 
 const Navbar = () => {
-  const navigation = ['Features', 'Pricing', 'Company'];
+  const navigation = [
+    {
+      name: 'Features',
+      url: '/',
+    },
+    { name: 'Pricing', url: '/plans' },
+  ];
+
   const { user } = useAuth();
   return (
     <div className='w-full'>
@@ -49,13 +57,13 @@ const Navbar = () => {
                 <Disclosure.Panel className='my-5 flex w-full flex-wrap lg:hidden'>
                   <>
                     {navigation.map((item, index) => (
-                      <a
+                      <Link
                         key={index}
-                        href='/'
+                        to={item.url}
                         className='-ml-4 w-full rounded-md px-4 py-2 text-gray-500  hover:text-indigo-500 focus:bg-indigo-100 focus:text-indigo-500 focus:outline-none'
                       >
-                        {item}
-                      </a>
+                        {item.name}
+                      </Link>
                     ))}
                     {user ? <AvatarWithDropdown /> : <SignUp />}
                   </>
@@ -68,14 +76,14 @@ const Navbar = () => {
         {/* menu  */}
         <div className='hidden text-center lg:flex lg:items-center'>
           <ul className='flex-1 list-none items-center justify-end pt-6 lg:flex lg:pt-0'>
-            {navigation.map((menu, index) => (
+            {navigation.map((item, index) => (
               <li className='nav__item mr-3' key={index}>
-                <a
-                  href='/'
+                <Link
+                  to={item.url}
                   className='inline-block rounded-md px-4 py-2 text-lg font-normal text-gray-800 no-underline  hover:text-indigo-500 focus:bg-indigo-100 focus:text-indigo-500 focus:outline-none '
                 >
-                  {menu}
-                </a>
+                  {item.name}
+                </Link>
               </li>
             ))}
           </ul>
