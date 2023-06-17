@@ -45,7 +45,16 @@ export const Dashboard = () => {
   return (
     <>
       <Header />
-      <main>
+      <main
+        style={{
+          backgroundImage: 'url(' + require('../../../constants/img/bg_image1.png') + ')',
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          minHeight: 'calc(100vh - 64px)',
+          width: '100%',
+        }}
+      >
         <div className='container px-28 py-8'>
           <Button onClick={createANewDocument}>
             <Plus className='mr-2 h-4 w-4' />

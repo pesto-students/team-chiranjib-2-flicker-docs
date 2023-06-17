@@ -11,7 +11,7 @@ export const Header = () => {
   const { pathname } = useLocation();
 
   return (
-    <header className='flex h-16 items-center justify-between px-12 shadow-md'>
+    <header className='flex h-16 items-center justify-between border-b border-slate-100 px-12 shadow-md'>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
       <div
         className='flex cursor-pointer items-center gap-3'

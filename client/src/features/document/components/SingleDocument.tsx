@@ -16,7 +16,7 @@ const SingleDocument = ({ displayName, createdAt, updatedAt, name }: SingleDocum
       <Link to={`/editor/${name}`}>
         <div className='h-[70%] bg-slate-50'></div>
       </Link>
-      <div className='flex h-[30%] gap-2 border-t p-4'>
+      <div className='flex h-[30%] gap-2 border-t bg-white p-4'>
         <div className='flex h-full w-[90%] flex-col justify-between'>
           <p className=' truncate text-sm text-slate-600'>{displayName}</p>
           <div className='flex'>
