@@ -17,7 +17,8 @@ const Hero = () => {
         <div className='flex w-full items-center lg:w-1/2'>
           <div className='mb-8 max-w-2xl'>
             <h1 className='text-4xl font-bold leading-snug tracking-tight text-gray-800 lg:text-4xl lg:leading-tight xl:text-6xl xl:leading-tight'>
-              The Ultimate Online <br /> AI-Powered Collaborative Text Editor
+              The Ultimate Realtime
+              <br /> AI-Powered Collaborative Text Editor
             </h1>
             <p className='py-5 text-xl leading-normal text-gray-500 lg:text-xl xl:text-2xl'>
               Embrace a new era of seamless, AI-powered editing. Boost productivity with Flicker
