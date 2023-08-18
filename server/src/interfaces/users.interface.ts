@@ -6,6 +6,7 @@ export interface User {
   lastName: string;
   picture: string;
   token: string;
+  password?: string;
   documents?: Array<string>;
   sharedDocuments?: Array<string>;
   subscription?: {

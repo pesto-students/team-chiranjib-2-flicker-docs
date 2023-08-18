@@ -13,6 +13,7 @@ export class AuthRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/signin`, this.auth.signIn);
+    this.router.post(`${this.path}/signin-with-email`, this.auth.signInWithEmail);
     this.router.get(`${this.path}/me`, this.auth.getUser);
     this.router.get(`${this.path}/test`, (req, res) => {
       res.json({ message: 'welcome to flicker docs' });

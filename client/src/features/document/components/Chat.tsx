@@ -21,15 +21,17 @@ type SingleUserProps = {
 const SingleUser = ({ user, isOnline }: SingleUserProps) => (
   <div key={user._id} className='my-1 flex items-center gap-3'>
     <div className={`rounded-full  ${isOnline ? 'border-2 border-green-400' : ''} p-0.5`}>
-      <Avatar className={`h-7 w-7`}>
+      <Avatar className={`h-7 w-7 cursor-pointer`}>
         <AvatarImage src={user?.picture} alt='@shadcn' />
         <AvatarFallback>
-          {user?.firstName.charAt(0)}
-          {user?.lastName.charAt(0)}
+          {user?.firstName?.charAt(0)}
+          {user?.lastName?.charAt(0)}
         </AvatarFallback>
       </Avatar>
     </div>
-    <div className='text-sm capitalize'>{`${user.firstName.toLowerCase()}  ${user.lastName.toLowerCase()}`}</div>
+    <div className='text-sm capitalize'>{`${user.firstName?.toLowerCase()}  ${
+      user.lastName?.toLowerCase() || ''
+    }`}</div>
   </div>
 );
 

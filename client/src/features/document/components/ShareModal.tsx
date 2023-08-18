@@ -21,7 +21,7 @@ type UserRowProps = {
 const UserRow = ({ user, status }: UserRowProps) => (
   <div className='flex justify-between'>
     <div className='flex gap-4'>
-      <Avatar className='h-6 w-6'>
+      <Avatar className='h-6 w-6 cursor-pointer'>
         <AvatarImage src={user?.picture} alt='@shadcn' />
         <AvatarFallback>
           {user?.firstName

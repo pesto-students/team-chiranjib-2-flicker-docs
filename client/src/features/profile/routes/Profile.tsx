@@ -22,11 +22,11 @@ export const Profile = () => {
 
   return (
     <div className='flex flex-col items-center gap-8 border-red-500 pt-14'>
-      <Avatar className='h-24 w-24'>
+      <Avatar className='h-24 w-24 cursor-pointer'>
         <AvatarImage src={user?.picture} alt='@shadcn' />
         <AvatarFallback>
-          {user?.firstName.charAt(0)}
-          {user?.lastName.charAt(0)}
+          {user?.firstName?.charAt(0)}
+          {user?.lastName?.charAt(0)}
         </AvatarFallback>
       </Avatar>
 

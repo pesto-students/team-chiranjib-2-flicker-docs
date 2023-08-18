@@ -20,6 +20,9 @@ const UserSchema: Schema = new Schema({
   picture: {
     type: String,
   },
+  password: {
+    type: String,
+  },
   documents: [
     {
       type: mongoose.Schema.Types.ObjectId,

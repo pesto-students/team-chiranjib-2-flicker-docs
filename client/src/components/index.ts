@@ -5,6 +5,8 @@ export * from './ui/skeleton';
 export * from './ui/tabs';
 export * from './ui/label';
 export * from './ui/progress';
+export * from './ui/Seperator';
+export * from './ui/Card';
 
 export * from './AvatarWithDropdown';
 export * from './Header';

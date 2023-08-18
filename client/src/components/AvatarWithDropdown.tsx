@@ -21,11 +21,11 @@ export function AvatarWithDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar>
+        <Avatar className='cursor-pointer'>
           <AvatarImage src={user?.picture} alt='@shadcn' />
           <AvatarFallback>
-            {user?.firstName.charAt(0)}
-            {user?.lastName.charAt(0)}
+            {user?.firstName?.charAt(0)}
+            {user?.lastName?.charAt(0)}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

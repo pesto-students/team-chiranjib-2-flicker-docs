@@ -23,6 +23,13 @@ async function verifyGoogleToken(token: any) {
   }
 }
 
+function isValidEmail(email) {
+  // Regular expression pattern for a basic email validation
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return emailPattern.test(email);
+}
+
 @Service()
 export class AuthService {
   public async signIn(credential: any): Promise<User> {
@@ -67,6 +74,49 @@ export class AuthService {
         }),
       };
     }
+  }
+  public async signInWithEmail(email: string, password: string): Promise<User> {
+    if (!email || !password) {
+      throw new HttpException(409, 'empty email or password');
+    }
+    if (!isValidEmail(email)) {
+      throw new HttpException(409, 'email not valid');
+    }
+
+    const userData = {
+      name: email.split('@')[0],
+      firstName: email.split('@')[0],
+      email,
+      password,
+    };
+
+    const findUser: User = await UserModel.findOne({ email });
+
+    if (findUser) {
+      if (findUser.password === password) {
+        return {
+          ...findUser,
+          token: sign({ email }, 'myScret', {
+            expiresIn: '3d',
+          }),
+        };
+      } else {
+        throw new HttpException(409, 'password incorrect');
+      }
+    }
+
+    const user = new UserModel({
+      ...userData,
+    });
+
+    const newUser = await user.save();
+
+    return {
+      ...newUser,
+      token: sign({ email }, 'myScret', {
+        expiresIn: '3d',
+      }),
+    };
   }
 
   public async getUser(token: any) {

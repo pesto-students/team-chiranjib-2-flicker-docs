@@ -16,6 +16,16 @@ export class AuthController {
       next(error);
     }
   };
+  public signInWithEmail = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, password } = req.body;
+      const signUpUserData: User = await this.auth.signInWithEmail(email, password);
+
+      res.status(201).json({ user: signUpUserData, message: 'Signup was successful' });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   public getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { FlickerDocLarge } from '@/constants';
 import { SignUp } from '@/features/auth';
-import { useAuth } from '@/hooks';
+import { useAuth, useModal } from '@/hooks';
 
 import { AvatarWithDropdown } from '../AvatarWithDropdown';
 
@@ -11,6 +11,9 @@ const Navbar = () => {
   const navigation = [{ name: 'Pricing', url: '/plans' }];
 
   const { user } = useAuth();
+
+  const { isOpen, openModal, closeModal } = useModal();
+
   return (
     <div className='w-full'>
       <nav className='container relative mx-auto flex flex-wrap items-center justify-between p-8 lg:justify-between xl:px-0'>
@@ -59,7 +62,11 @@ const Navbar = () => {
                         {item.name}
                       </Link>
                     ))}
-                    {user ? <AvatarWithDropdown /> : <SignUp />}
+                    {user ? (
+                      <AvatarWithDropdown />
+                    ) : (
+                      <SignUp isOpen={isOpen} openModal={openModal} closeModal={closeModal} />
+                    )}
                   </>
                 </Disclosure.Panel>
               </div>
@@ -84,7 +91,11 @@ const Navbar = () => {
         </div>
 
         <div className='nav__item mr-3 hidden space-x-4 lg:flex'>
-          {user ? <AvatarWithDropdown /> : <SignUp />}
+          {user ? (
+            <AvatarWithDropdown />
+          ) : (
+            <SignUp isOpen={isOpen} openModal={openModal} closeModal={closeModal} />
+          )}
         </div>
       </nav>
     </div>
